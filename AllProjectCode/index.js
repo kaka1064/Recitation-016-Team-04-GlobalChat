@@ -45,6 +45,7 @@ app.get('/welcome', (req, res) => {
 app.get('/login',(req,res)=>{
     res.render('views/pages/login');
 });
+
 app.listen(3000);
 console.log("success");
 module.exports = app;
