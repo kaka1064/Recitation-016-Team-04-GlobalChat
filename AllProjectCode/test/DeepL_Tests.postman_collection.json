@@ -1,0 +1,56 @@
+{
+	"info": {
+		"_postman_id": "536c6d06-0334-426f-aa54-8bd7e9d7fb46",
+		"name": "deepl",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26296371"
+	},
+	"item": [
+		{
+			"name": "HelloWorld-Japanese",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "HelloWorld-Spanish",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "api-free.deepl.com/v2/translate?text=hello world&target_lang=ES",
+					"host": [
+						"api-free",
+						"deepl",
+						"com"
+					],
+					"path": [
+						"v2",
+						"translate"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "hello world"
+						},
+						{
+							"key": "target_lang",
+							"value": "ES"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HelloWorld-Estonian",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
