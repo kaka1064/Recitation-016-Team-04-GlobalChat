@@ -41,75 +41,105 @@ app.use(
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
 });
+
+///////////////   THIS   /////////////////////////////////////////////////////////////////////
+
+app.get('/', (req, res) => {
+    res.redirect('/register'); //this will call the /anotherRoute route in the API
+  });
+
+///////////////   THIS   /////////////////////////////////////////////////////////////////////
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
+app.get('/home', (req,res) => {
+  res.render('pages/home', {username: req.session.user.username})
+});
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
+///////////////    REGISTER   /////////////////////////////////////////////////////////////////////
+
+app.get('/register', (req, res) => {
+    res.render('pages/register')
+  });  
+
+app.post('/register', async (req, res) => {
+    //hash the password using bcrypt library
+    const hash = await bcrypt.hash(req.body.password, 10);
+  
+    // var password = req.body.password;
+    var username = req.body.username;
+    // To-DO: Insert username and hashed password into 'users' table
+  
+    const query = `insert into users (username, password) values ($1, $2) returning * ;`;
+    // const query = `insert into users (username, password) values (${req.body.username}, ${hash}) returning * ;`;
+    console.log(query);
+    //we dont need the req.body,username and hash below if we type it into the query
+    db.any(query, [
+      req.body.username,
+      hash,
+    ])
+  
+    .then(function (data) {
+      res.render("pages/login", {message: "please log in now."}); //i also changed this to render instead
+      //so that users can have a message knowing what they are supposed to do.
+    })
+  
+    .catch(function(err) {
+      return console.log(err);
+      res.redirect("/register");
+    });
+  });  
+
+///////////////    REGISTER  /////////////////////////////////////////////////////////////////////
+
+///////////////    LOGIN   /////////////////////////////////////////////////////////////////////
+
 app.get('/login',(req,res)=>{
     res.render('pages/login');
 });
-app.post("/register", async (req,res) => {
-  const username = req.body.username;
-  const hash = await bcrypt.hash(req.body.password, 10);
-  const query = `insert into users (username, password) values ($1, $2) returning $1;`; 
-  const values = [username, hash];
-  db.one(query,values).then(data=>{
-    res.render("pages/login",{
-      message: `${username}'s account created successfully`,
-      error: false
-    });
-  }).catch(error=>{
-    res.render("pages/login",{
-      message: `ERROR: ${error}`,
-      error: true
-    });
-  });
-});
 
-app.post("/login", (req,res)=> {
-  const username = req.body.username;
-  const query = `select * from users where username = $1;`;
-  const list = [username];
-  db.one(query,list).then(temp=>{
-    const match = bcrypt.compare(req.body.password, temp.password,(error,result)=>{
-      if (result && !error){
-        req.session.save();
-        res.render("pages/home");
-      }
-      else if (error) res.render("pages/login",{message:error, error: true});
-      else res.redirect("/home");
-    });
-  }).catch(error=>{
-    res.render("pages/login",{
-      message: "Invalid username/password",
-      error: true
-    });
-  });
-});
+app.post('/login', async (req,res) =>  { 
+    const username = req.body.username;
+    const password = req.body.password;
+    const query = `select * from users where users.username = $1`;
+    // const query = `select * from users where users.username = ${req.body.username}`;
+    const values = [username];
+    
+    db.one(query, values)
+      .then(async (data) => {
 
-app.get("/register", (req, res) => {
-  res.render('pages/register', {
-      error: false,
-      message: ``
-  });
-}); 
+        const match = await bcrypt.compare(req.body.password, data.password);
+        if (match) {
+          req.session.user = data;
+          req.session.save();
+          res.redirect("/home");
+          //will probably need to change this to /home as /discover is from lab 9
+        } else {
+          // throw new Error("Incorrect username or password.");
+          res.render("pages/login", {message: "Incorrect username or password."});
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.render("pages/register", {message: "No user found."}); //i changed this to render instead of redirect
+        //so that a message can display, i believe a message gets rid of user confusion
+      });
+  })
 
+///////////////    LOGIN   /////////////////////////////////////////////////////////////////////
 
-// Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
+///////////////    lOGOUT  /////////////////////////////////////////////////////////////////////
 
-// Authentication Required
-app.use(auth);
-
-app.get("/logout",(req,res)=>{
+app.get("/logout", (req, res) => {
   req.session.destroy();
-  res.render("pages/login", {
-    message: "Log out successful",
-    error: false
-  });
-});
+  res.render("pages/login", {message: "Logged out successfully"})
+})
+
+///////////////    lOGOUT  /////////////////////////////////////////////////////////////////////
+
+//app.use(auth);
 
 module.exports = app.listen(3000);
-console.log("success");
+console.log('Server is listening on port 3000');

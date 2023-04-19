@@ -1,36 +1,26 @@
 <%- include ('../partials/head') %>
-    <%- include ('../partials/menu') %>
+<%- include ('../partials/menu') %>
+<!-- don't need the menu yet when we haven't logged in yet -->
 
-        <main>
-            <div class="container">
-                <form class="form" action="/login" method="post">
 
-                    <table class="table">
-                        <tr>
-                            <td>
-                                <label>Username</label>
-                            </td>
-                            <td>
-                                <input type="text" name="username">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Password</label>
-                            </td>
-                            <td>
-                                <input type="password" name="password">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                        <td><label for="donthaveaccount">Don't have an account?</label>
-                            <a href="/register">Register</a></td>
-                            <td><button class="btn btn-primary" type="submit">Login</button></td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
-        </main>
 
-        <%- include ('../partials/footer') %>
+<main>
+  <div class="container">
+    <div class="col"><%- include ('../partials/message') %></div>
+    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+    <form action = "/login" method = "post">
+      <div class="mb-3">
+        <label for="username1" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" name = "username">
+      </div>
+      <div class="mb-3">
+        <label for="password1" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name = "password">
+      </div>
+      <button type="submit" class="btn btn-primary" value = "Submit">Login</button>
+    </form>
+    <p>Don't have an account yet? <a href="/register" class="link-primary">Register here</a></p>
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>
