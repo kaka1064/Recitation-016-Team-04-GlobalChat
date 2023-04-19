@@ -21,7 +21,7 @@ db.connect().then(obj=>{
     console.log(error);
 });
 
-app.set('view-engine','ejs');
+app.set('view engine','ejs');
 app.use(bodyParser.json());
 
 app.use(
@@ -42,7 +42,7 @@ app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
 });
 app.get('/login',(req,res)=>{
-    res.render('views/pages/login');
+    res.render('pages/login');
 });
 app.post("/register", async (req,res) => {
   const username = req.body.username;
@@ -50,12 +50,12 @@ app.post("/register", async (req,res) => {
   const query = `insert into users (username, password) values ($1, $2) returning $1;`; 
   const values = [username, hash];
   db.one(query,values).then(data=>{
-    res.render("views/pages/login",{
+    res.render("pages/login",{
       message: `${username}'s account created successfully`,
       error: false
     });
   }).catch(error=>{
-    res.render("views/pages/login",{
+    res.render("pages/login",{
       message: `ERROR: ${error}`,
       error: true
     });
@@ -70,28 +70,26 @@ app.post("/login", (req,res)=> {
     const match = bcrypt.compare(req.body.password, temp.password,(error,result)=>{
       if (result && !error){
         req.session.save();
-        res.redirect("/home");
+        res.render("pages/home");
       }
-      else if (error) res.render("views/pages/login",{message:error, error: true});
+      else if (error) res.render("pages/login",{message:error, error: true});
       else res.redirect("/home");
     });
   }).catch(error=>{
-    res.render("views/pages/login",{
+    res.render("pages/login",{
       message: "Invalid username/password",
       error: true
     });
   });
 });
 
-app.get("/logout",(req,res)=>{
-  user.username = null;
-  user.password = null;
-  req.session.destroy();
-  res.render("views/pages/login", {
-    message: "Log out successful",
-    error: false
+app.get("/register", (req, res) => {
+  res.render('pages/register', {
+      error: false,
+      message: ``
   });
-});
+}); 
+
 
 // Authentication Middleware.
 const auth = (req, res, next) => {
@@ -104,6 +102,14 @@ const auth = (req, res, next) => {
 
 // Authentication Required
 app.use(auth);
+
+app.get("/logout",(req,res)=>{
+  req.session.destroy();
+  res.render("pages/login", {
+    message: "Log out successful",
+    error: false
+  });
+});
 
 module.exports = app.listen(3000);
 console.log("success");
