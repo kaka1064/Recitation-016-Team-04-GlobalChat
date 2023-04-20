@@ -45,7 +45,7 @@ app.get('/welcome', (req, res) => {
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
 
 app.get('/', (req, res) => {
-    res.redirect('/register'); //this will call the /anotherRoute route in the API
+    res.render('pages/register'); //this will call the /anotherRoute route in the API
   });
 
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
@@ -87,8 +87,8 @@ app.post('/register', async (req, res) => {
     })
   
     .catch(function(err) {
-      return console.log(err);
-      res.redirect("/register");
+      //return console.log(err);
+      res.render("pages/register", {message: "Error with registration"});
     });
   });  
 
@@ -114,16 +114,19 @@ app.post('/login', async (req,res) =>  {
         if (match) {
           req.session.user = data;
           req.session.save();
-          res.redirect("/home");
-          //will probably need to change this to /home as /discover is from lab 9
+          res.render("pages/home", {username, message: "Successfully logged in"});
         } else {
           // throw new Error("Incorrect username or password.");
-          res.render("pages/login", {message: "Incorrect username or password."});
+          res.render("pages/login", {message: "Invalid input"});
+          //changed these messages ^ v to invalid input to try to match negatvie test case
         }
       })
       .catch((err) => {
-        console.log(err);
-        res.render("pages/register", {message: "No user found."}); //i changed this to render instead of redirect
+        //console.log(err);
+        //may only need this part for lab 11
+        // res.json({status: 'fail', message: 'Invalid input'});
+        res.render("pages/register", {message: "Invalid input"}); 
+        //i changed this to render instead of redirect
         //so that a message can display, i believe a message gets rid of user confusion
       });
   })
