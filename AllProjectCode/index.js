@@ -41,8 +41,18 @@ app.use(
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
 });
+
+
+app.get('/', (req, res) => {
+  res.redirect('/login'); //this will call the /anotherRoute route in the API
+});
+
 app.get('/login',(req,res)=>{
     res.render('pages/login');
+});
+
+app.get('/home', (req,res) => {
+  res.render('pages/home');
 });
 app.post("/register", async (req,res) => {
   const username = req.body.username;
@@ -50,7 +60,7 @@ app.post("/register", async (req,res) => {
   const query = `insert into users (username, password) values ($1, $2) returning $1;`; 
   const values = [username, hash];
   db.one(query,values).then(data=>{
-    res.render("pages/login",{
+    res.render("pages/login", {
       message: `${username}'s account created successfully`,
       error: false
     });
@@ -62,26 +72,34 @@ app.post("/register", async (req,res) => {
   });
 });
 
-app.post("/login", (req,res)=> {
+app.post('/login', async (req,res) =>  { 
   const username = req.body.username;
-  const query = `select * from users where username = $1;`;
-  const list = [username];
-  db.one(query,list).then(temp=>{
-    const match = bcrypt.compare(req.body.password, temp.password,(error,result)=>{
-      if (result && !error){
+  const password = req.body.password;
+  const query = `select * from users where users.username = $1`;
+  // this may have problems with what the username value is
+  const values = [username];
+  
+  db.one(query, values)
+    .then(async (data) => {
+      // user.username = username;
+      // user.password = data.password;
+
+      const match = await bcrypt.compare(req.body.password, data.password);
+      if (match) {
+        req.session.user = data;
         req.session.save();
-        res.render("pages/home");
+        res.redirect("pages/home");
+      } else {
+        // throw new Error("Incorrect username or password.");
+        res.render("pages/login", {message: "Incorrect username or password."});
       }
-      else if (error) res.render("pages/login",{message:error, error: true});
-      else res.redirect("/home");
+    })
+    .catch((err) => {
+      console.log(err);
+      res.render("pages/register", {message: "No user found."}); //i changed this to render instead of redirect
+      //so that a message can display, i believe a message gets rid of user confusion
     });
-  }).catch(error=>{
-    res.render("pages/login",{
-      message: "Invalid username/password",
-      error: true
-    });
-  });
-});
+})
 
 app.get("/register", (req, res) => {
   res.render('pages/register', {
@@ -92,16 +110,16 @@ app.get("/register", (req, res) => {
 
 
 // Authentication Middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
+// const auth = (req, res, next) => {
+//   if (!req.session.user) {
+//     // Default to login page.
+//     return res.redirect('/login');
+//   }
+//   next();
+// };
 
 // Authentication Required
-app.use(auth);
+// app.use(auth);
 
 app.get("/logout",(req,res)=>{
   req.session.destroy();
@@ -112,4 +130,4 @@ app.get("/logout",(req,res)=>{
 });
 
 module.exports = app.listen(3000);
-console.log("success");
+console.log("success - listening");

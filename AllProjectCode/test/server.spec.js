@@ -24,5 +24,31 @@ describe('Server!', () => {
   });
 
   // ===========================================================================
-  // TO-DO: Part A Login unit test case
+ // TO-DO: Part A Login unit test case
+  it('positive : /login', done => {
+    chai
+      .request(server)
+      .post('/login')
+      .send({username: 'joey', password: '12345'})
+      .end((err, res) => {
+        console.log(res);
+        expect(res).to.have.status(200);
+        //expect(res.body.message).to.equals('Success');
+        done();
+      });
+  });
+
+  // //We are checking POST /add_user API by passing the user info in in incorrect manner (name cannot be an integer). This test case should pass and return a status 200 along with a "Invalid input" message.
+  // it('Negative : /login. Checking invalid name', done => {
+  //   chai
+  //     .request(server)
+  //     .post('/login')
+  //     .send({username: 'jdfgh', password: 'aaaaa'})
+  //     .end((err, res) => {
+  //       expect(res).to.have.status(400);
+  //       expect(res.body.message).to.equals('Invalid input');
+  //       done();
+  //     });
+  //});
+
 });
