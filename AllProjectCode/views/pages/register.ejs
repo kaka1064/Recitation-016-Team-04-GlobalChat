@@ -11,11 +11,23 @@
     <form action = "/register" method = "post">
       <div class="mb-3">
         <label for="username1" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name = "username">
+        <input type="text" class="form-control" id="username" name = "username"  required>
       </div>
       <div class="mb-3">
         <label for="password1" class="form-label">Password (4 characters min.)</label>
         <input type="password" class="form-control" id="password" name = "password" minlength="4" required>
+      </div>
+      <div class="mb-3">
+        <label for="firstname1" class="form-label">First name</label>
+        <input type="text" class="form-control" id="firstname" name="firstname"  required>
+      </div>
+      <div class="mb-3">
+        <label for="lastname1" class="form-label">Last name</label>
+        <input type="text" class="form-control" id="lastname" name="lastname"  required>
+      </div>
+      <div class="mb-3">
+        <label for="preference1" class="form-label">Preference</label>
+        <input type="text" class="form-control" id="preference" name="preference" required>
       </div>
       <button type="submit" class="btn btn-primary" value = "Submit">Register</button>
       <!-- for the button go back to previous lab and find what need to do, do we need to create seperate form for button  -->

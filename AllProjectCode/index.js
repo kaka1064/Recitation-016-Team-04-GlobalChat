@@ -80,32 +80,38 @@ app.get('/register', (req, res) => {
   });  
 
 app.post('/register', async (req, res) => {
-    //hash the password using bcrypt library
-    const hash = await bcrypt.hash(req.body.password, 10);
-  
-    // var password = req.body.password;
-    var username = req.body.username;
-    // To-DO: Insert username and hashed password into 'users' table
-  
-    const query = `insert into users (username, password) values ($1, $2) returning * ;`;
-    // const query = `insert into users (username, password) values (${req.body.username}, ${hash}) returning * ;`;
-    console.log(query);
-    //we dont need the req.body,username and hash below if we type it into the query
-    db.any(query, [
-      req.body.username,
-      hash,
-    ])
-  
-    .then(function (data) {
-      res.render("pages/login", {message: "please log in now."}); //i also changed this to render instead
-      //so that users can have a message knowing what they are supposed to do.
-    })
-  
-    .catch(function(err) {
-      //return console.log(err);
-      res.render("pages/register", {message: "Error with registration - maybe try a different username"});
-    });
-  });  
+  //hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
+
+  // var password = req.body.password;
+  var username = req.body.username;
+  var firstname = req.body.firstname;
+  var lastname = req.body.lastname;
+  var preference = req.body.preference;
+  // To-DO: Insert username and hashed password into 'users' table
+
+  const query = `insert into users (username, password, firstname, lastname, preference) values ($1, $2, $3, $4, $5) returning * ;`;
+  // const query = `insert into users (username, password) values (${req.body.username}, ${hash}) returning * ;`;
+  console.log(query);
+  //we dont need the req.body,username and hash below if we type it into the query
+  db.any(query, [
+    req.body.username,
+    hash,
+    req.body.firstname,
+    req.body.lastname,
+    req.body.preference,
+  ])
+
+  .then(function (data) {
+    res.render("pages/login", {message: "please log in now."}); //i also changed this to render instead
+    //so that users can have a message knowing what they are supposed to do.
+  })
+
+  .catch(function(err) {
+    //return console.log(err);
+    res.render("pages/register", {message: "Error with registration - maybe try a different username"});
+  });
+});
 
 ///////////////    REGISTER  /////////////////////////////////////////////////////////////////////
 
