@@ -2,9 +2,16 @@
 <%- include ('../partials/menu') %>
 
 <main>
+   <div class="container"><%- include ('../partials/message') %></div>
     <div class="container">
       <!-- THE REST OF YOUR HTML CODE GOES HERE -->
       <h1><centre>Settings page</centre></h1>
+      <%if (locals.preference) {%><h3>You are currently viewing posts in <% locals.preference%></h3><%}%>
+      <form action="/settings" method="post">
+        <label for="preference" value="preference">Preference</label>
+        <input type="text" name="preference" id="preference" class="form-control">
+        <input type="submit" value="Change">
+      </form>
     </div>
 </main>
 
