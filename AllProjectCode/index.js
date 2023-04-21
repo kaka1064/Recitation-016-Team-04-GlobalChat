@@ -42,6 +42,21 @@ app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
 });
 
+///////////////   Chat Box   ////////////////////////////////////////////////////////////////
+
+app.get('/chatbox', (req, res) => {
+  res.render('pages/chatbox');
+});
+
+///////////////   Chat Box   ////////////////////////////////////////////////////////////////
+
+///////////////   Settings   ////////////////////////////////////////////////////////////////
+app.get('/settings', (req, res) => {
+    res.render('pages/settings');
+});
+
+///////////////   Settings   ////////////////////////////////////////////////////////////////
+
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
 
 app.get('/', (req, res) => {
@@ -88,7 +103,7 @@ app.post('/register', async (req, res) => {
   
     .catch(function(err) {
       //return console.log(err);
-      res.render("pages/register", {message: "Error with registration"});
+      res.render("pages/register", {message: "Error with registration - maybe try a different username"});
     });
   });  
 
