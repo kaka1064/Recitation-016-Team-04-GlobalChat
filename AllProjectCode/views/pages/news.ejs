@@ -1,0 +1,43 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<main>
+    <div class="container">
+      <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+      <h1><centre>Chatbox page</centre></h1>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        New Post
+      </button>
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action = "/news" method = "POST">
+                <div class="mb-3">
+                  <label for="username1" class="form-label">Username:</label>
+                  <input type="text" class="form-control" id="username" name ="username"  required>
+                </div>
+                <div class="mb-3">
+                  <label for="post1" class="form-label">Post: </label>
+                  <input type="text" class="form-control" id="post" name = "post" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Post</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</main>
+
+<%- include ('../partials/footer') %>

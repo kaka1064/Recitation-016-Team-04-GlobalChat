@@ -15,8 +15,8 @@ CREATE TABLE friends(
     friends VARCHAR(50)
 );
 
-DROP TABLE IF EXISTS posts CASCADE;
-CREATE TABLE posts(
+DROP TABLE IF EXISTS news CASCADE;
+CREATE TABLE news(
     username VARCHAR(50),
     post text
 );

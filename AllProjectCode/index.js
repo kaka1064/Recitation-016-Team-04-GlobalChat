@@ -42,13 +42,20 @@ app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
 });
 
-///////////////   Chat Box   ////////////////////////////////////////////////////////////////
+///////////////   news   ////////////////////////////////////////////////////////////////
 
-app.get('/chatbox', (req, res) => {
-  res.render('pages/chatbox');
+app.get('/news', (req, res) => {
+  console.log("username", req.body);
+  res.render('pages/news');
 });
 
-///////////////   Chat Box   ////////////////////////////////////////////////////////////////
+//app.post  NEEDS TO BE DONE
+app.post('/news', (req, res) => {
+  console.log("username", req.body);
+  res.render('pages/news');
+});
+
+///////////////   news   ////////////////////////////////////////////////////////////////
 
 ///////////////   Settings   ////////////////////////////////////////////////////////////////
 app.get('/settings', (req, res) => {
@@ -60,7 +67,7 @@ app.get('/settings', (req, res) => {
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
 
 app.get('/', (req, res) => {
-    res.render('pages/register'); //this will call the /anotherRoute route in the API
+    res.render('pages/login'); //this will call the /anotherRoute route in the API
   });
 
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
