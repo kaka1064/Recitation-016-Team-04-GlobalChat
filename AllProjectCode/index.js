@@ -68,7 +68,7 @@ app.get('/', (req, res) => {
 ///////////////  HOME     ///////////////////////////////////////////////////////////////////
 
 app.get('/home', (req, res) => {
-  res.redirect('/news')
+  res.render('pages/home.ejs', {username: req.session.user.username})
 });
 
 
