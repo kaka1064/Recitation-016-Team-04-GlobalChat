@@ -7,11 +7,11 @@ const bcrypt = require('bcrypt');
 const axios = require('axios');
 
 const dbConfig = {
-    host: 'db', 
-    port: 5432, 
-    database: process.env.POSTGRES_DB,
-    user: process.env.POSTGRES_USER, 
-    password: process.env.POSTGRES_PASSWORD, 
+  host: 'db', 
+  port: 5432, 
+  database: process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER, 
+  password: process.env.POSTGRES_PASSWORD, 
 };
 
 const db = pgp(dbConfig);
@@ -24,12 +24,14 @@ db.connect().then(obj=>{
 app.set('view engine','ejs');
 app.use(bodyParser.json());
 
+app.use(express.static('public'))
+
 app.use(
-    session({
-        secret : process.env.SESSION_SECRET,
-        saveUninitialized: false,
-        resave: false,
-    })
+  session({
+      secret : process.env.SESSION_SECRET,
+      saveUninitialized: false,
+      resave: false,
+  })
 );
 
 app.use(
@@ -110,13 +112,7 @@ app.get('/', (req, res) => {
 
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
 
-///////////////  HOME     ///////////////////////////////////////////////////////////////////
 
-app.get('/home', (req,res) => {
-  res.render('pages/home', {username: req.session.user.username})
-});
-
-///////////////  HOME     ///////////////////////////////////////////////////////////////////
 
 ///////////////    REGISTER   /////////////////////////////////////////////////////////////////////
 
@@ -199,6 +195,39 @@ app.post('/login', async (req,res) =>  {
 
 ///////////////    LOGIN   /////////////////////////////////////////////////////////////////////
 
+// Authentication middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("login");
+  }
+  next();
+};  
+
+app.use(auth);
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
+app.get('/home', (req,res) => {
+  res.render('pages/home', {username: req.session.user.username})
+});
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
+///////////////   Chat Box   ////////////////////////////////////////////////////////////////
+
+app.get('/chatbox', (req, res) => {
+  res.render('pages/chatbox');
+});
+
+///////////////   Chat Box   ////////////////////////////////////////////////////////////////
+
+///////////////   Settings   ////////////////////////////////////////////////////////////////
+app.get('/settings', (req, res) => {
+    res.render('pages/settings');
+});
+
+///////////////   Settings   ////////////////////////////////////////////////////////////////
+
 ///////////////    lOGOUT  /////////////////////////////////////////////////////////////////////
 
 app.get("/logout", (req, res) => {
@@ -207,8 +236,6 @@ app.get("/logout", (req, res) => {
 })
 
 ///////////////    lOGOUT  /////////////////////////////////////////////////////////////////////
-
-//app.use(auth);
 
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
