@@ -28,6 +28,11 @@
               <td>
                 <%= posts.post %>
               </td>
+              <td>
+                <form method="POST" action="chatbox.ejs">
+                    <button type="submit" class="btn btn-primary"  style="background-color: green; border-color:green" disabled>Translate
+                </form>
+              </td>
             </tr>
             <% }); %>
         </tbody>
