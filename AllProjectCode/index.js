@@ -45,14 +45,36 @@ app.get('/welcome', (req, res) => {
 ///////////////   news   ////////////////////////////////////////////////////////////////
 
 app.get('/news', (req, res) => {
-  console.log("username", req.body);
-  res.render('pages/news');
+  // console.log("username", req.body);
+  res.render('pages/news', {username: req.session.user.username});
 });
 
 //app.post  NEEDS TO BE DONE
 app.post('/news', (req, res) => {
-  console.log("username", req.body);
-  res.render('pages/news');
+  //console.log("username", req.body);
+  //res.render('pages/news');
+  var username = req.body.username;
+  var post = req.body.post;
+  var topic = req.body.topic;
+  
+
+  const query = `insert into news (username, post, topic) values ($1, $2, $3) returning * ;`;
+  console.log(query);
+  console.log(req.body);
+  db.any(query, [
+    req.body.username,
+    req.body.post,
+    req.body.topic,
+  ])
+
+  .then(function (data) {
+    res.render("pages/news", { username: req.session.user.username, message: "post successfully added"});
+  })
+
+  .catch(function(err) {
+    //return console.log(err);
+    res.render("pages/news", {username: req.session.user.username, message: "failed to add post"});
+  });
 });
 
 ///////////////   news   ////////////////////////////////////////////////////////////////
