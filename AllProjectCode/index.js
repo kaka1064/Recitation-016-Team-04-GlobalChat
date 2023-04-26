@@ -24,6 +24,8 @@ db.connect().then(obj=>{
 app.set('view engine','ejs');
 app.use(bodyParser.json());
 
+app.use(express.static('public'))
+
 app.use(
     session({
         secret : process.env.SESSION_SECRET,
