@@ -46,7 +46,19 @@ app.get('/welcome', (req, res) => {
 
 app.get('/news', (req, res) => {
   // console.log("username", req.body);
-  res.render('pages/news', {username: req.session.user.username});
+  //need to send the data from the database to the page when rendering
+  const query = `select * from news;`;
+  db.any(query)
+
+  .then(function (data) {
+    res.render('pages/news', {username: req.session.user.username, data: data});
+  })
+
+  .catch(function (err) {
+    return console.log(err);
+  });
+
+  // res.render('pages/news', {username: req.session.user.username});
 });
 
 //app.post  NEEDS TO BE DONE
@@ -55,20 +67,24 @@ app.post('/news', (req, res) => {
   //res.render('pages/news');
   var username = req.body.username;
   var post = req.body.post;
+  var language = req.body.language;
   var topic = req.body.topic;
   
 
-  const query = `insert into news (username, post, topic) values ($1, $2, $3) returning * ;`;
+  const query = `insert into news (username, post, language, topic) values ($1, $2, $3, $4) returning * ;`;
   console.log(query);
   console.log(req.body);
   db.any(query, [
     req.body.username,
     req.body.post,
+    req.body.language,
     req.body.topic,
+    
   ])
 
   .then(function (data) {
-    res.render("pages/news", { username: req.session.user.username, message: "post successfully added"});
+    res.redirect('/news');
+    // res.render("pages/news", { username: req.session.user.username, data: data, message: "post successfully added"});
   })
 
   .catch(function(err) {
@@ -153,7 +169,7 @@ app.get('/login',(req,res)=>{
 app.post('/login', async (req,res) =>  { 
     const username = req.body.username;
     const password = req.body.password;
-    const query = `select * from users where users.username = $1`;
+    const query = `select * from users where users.username = $1;`;
     // const query = `select * from users where users.username = ${req.body.username}`;
     const values = [username];
     
