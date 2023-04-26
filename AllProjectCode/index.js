@@ -67,8 +67,23 @@ app.get('/', (req, res) => {
 
 ///////////////  HOME     ///////////////////////////////////////////////////////////////////
 
-app.get('/home', (req,res) => {
-  res.render('pages/home', {username: req.session.user.username})
+app.get('/home', (req, res) => {
+  res.redirect('/news')
+});
+
+
+app.get('/news', (req,res) => {
+  var query = 'SELECT * FROM posts;';
+
+  db.any(query)
+  .then((posts) => {
+    console.log(posts);
+    res.render('pages/news.ejs', {posts, username: req.session.user.username});
+  })
+  .catch(function (err) {
+    console.log("There was an error");
+    // return console.log(err);
+  })
 });
 
 ///////////////  HOME     ///////////////////////////////////////////////////////////////////
@@ -135,7 +150,8 @@ app.post('/login', async (req,res) =>  {
         if (match) {
           req.session.user = data;
           req.session.save();
-          res.render("pages/home", {username, message: "Successfully logged in"});
+          res.redirect('/home');
+          //res.render("pages/home", {username, message: "Successfully logged in"});
         } else {
           // throw new Error("Incorrect username or password.");
           res.render("pages/login", {message: "Invalid input"});

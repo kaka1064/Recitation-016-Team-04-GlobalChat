@@ -1,0 +1,36 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<main>
+    <div class="container">
+      <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+      <div class="row">
+        <h1><centre>Welcome <%= username %>! </centre></h1>
+      </div>
+
+      <div class = row>
+        <h2>Here are a list of current news stories:</h2>
+      </div>
+
+      <table class="table" style="border-style: groove ;">
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Post</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% posts.forEach(function(posts) { %>
+            <tr>
+              <td>
+                <%= posts.username %>
+              </td>
+              <td>
+                <%= posts.post %>
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+<%- include ('../partials/footer') %>
