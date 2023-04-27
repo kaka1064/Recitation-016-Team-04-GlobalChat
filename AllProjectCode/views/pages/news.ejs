@@ -31,11 +31,11 @@
                 <div class="mb-3">
                   <label for="language1" class="form-label">Language</label>
                   <select id="language" name="language" required>
-                    <option value="english">English</option>
-                    <option value="japanese">Japanese</option>
-                    <option value="spanish">Spanish</option>
-                    <option value="french">French</option>
-                    <option value="German">German</option>
+                    <option value="EN">English</option>
+                    <option value="JA">Japanese</option>
+                    <option value="ES">Spanish</option>
+                    <option value="FR">French</option>
+                    <option value="DE">German</option>
                   </select>
                 </div>
                 <div class="mb-3">
@@ -70,11 +70,20 @@
             <td><%= item.username %></td>
             <td><%= item.post %></td>
             <td><%= item.topic %></td> 
-            <td> <button type="submit" class="btn btn-primary mb-3">translate</button> </td>
+            <!-- <td> <button type="submit" class="btn btn-primary mb-3">translate</button> </td> -->
+            <td>
+              <form method ="POST" action ="/translate">
+                  <input 
+                      type = "hidden"
+                      name = "post"
+                      value = "<%-item.post %>"
+                  />
+                <button type="submit" class="btn btn-primary mb-3" >Translate</button>
+              </form>
+            </td>
           </tr>
         <% }) %>
       </table>
-      
     </div>
 
 </main>
