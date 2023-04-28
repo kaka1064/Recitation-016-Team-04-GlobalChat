@@ -119,12 +119,15 @@ app.post("/settingsNewPassword", async (req,res)=>{
       let pass = await bcrypt.hash(req.body.password, 10);
       let query = `update users set password = $1 where username = $2 returning *;`;
       db.one(query,[pass,req.session.user.username]).then(data=>{
-        res.render("pages/settings",{message: 'password updated successfully'});
+        res.render("pages/settings",{
+          message: 'password updated successfully', 
+          user:req.session.user
+      });
       }).catch(error=>{
-        res.render("pages/settings",{message: error, error: true});
+        res.render("pages/settings",{message: error, error: true, user: req.session.user});
       });
     } else {
-      res.render("pages/settings",{message: 'incorrect password', error: true});
+      res.render("pages/settings",{message: 'incorrect password', error: true, user:req.session.user});
     }
   });
 });
@@ -133,14 +136,18 @@ app.post("/settings",(req,res) => {
   let query = `update users set preference = $1 where username = $2 returning *;`
   db.one(query,[req.body.preference,req.session.user.username])
   .then(data=>{
-    req.session.user.preference = req.body.preference;
+    req.session.user.preference = data.preference;
     req.session.save();
-    res.render('pages/settings',{message:`updated language preference to: ${data.preference}`});
+    res.render('pages/settings',{
+      message:`updated language preference to: ${data.preference}`,
+      user:req.session.user});
   })
   .catch(error=>{
     console.log(error);
     res.render('pages/settings',{
-      message:error, error: true
+      message:error,
+      error: true, 
+      user: req.session.user
     });
   });
 });
