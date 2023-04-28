@@ -3,8 +3,8 @@
 <main>
   <div class="container">
       <%- include ('../partials/message') %>
-      <h1><centre>Settings page</centre></h1>
-      <%if (locals.preference) {%><h3>You are currently viewing posts in <% preference %></h3><%}%>
+      <h1><centre>Settings</centre></h1>
+      <% if (locals.user) {%><h3 style="color:#aaaaaa">You are currently viewing posts in <%- user.preference %></h3><%}%>
       <form class="form"  action="/settings" method="post">
         <label for="preference" value="preference">Preference</label>
         <input type="text" name="preference" id="preference" class="form-control">

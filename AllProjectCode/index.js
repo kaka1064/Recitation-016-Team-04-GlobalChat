@@ -128,6 +128,8 @@ app.post("/settingsNewPassword", async (req,res)=>{
         }).catch(error=>{
           res.render("pages/settings",{message: error, error: true});
         });
+      } else {
+        res.render("pages/settings",{message: 'incorrect password', error: true});
       }
     });
   }
@@ -151,14 +153,12 @@ app.post("/settings",(req,res) => {
 
 app.get('/settings', (req, res) => {
   res.render('pages/settings',{
-    error:false,
-    preference:req.session.user.preference
+    user: req.session.user,
   });
 });
 
 app.get('/', (req, res) => {
   res.render('pages/home',{
-    username:req.session.user.username,
     user: req.session.user
   });
 });
