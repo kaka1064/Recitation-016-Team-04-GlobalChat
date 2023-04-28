@@ -4,7 +4,7 @@
   <div class="container">
       <%- include ('../partials/message') %>
       <h1><centre>Settings</centre></h1>
-      <% if (locals.user) {%><h3 style="color:#5b5b5b">You are currently viewing posts in <%- user.preference %></h3><%}%>
+      <% if (locals.user) {%><h3 style="color:#5b5b5b">You are currently viewing posts in <strong id="stext"><%- user.preference %></strong></h3><%}%>
       <form class="form"  action="/settings" method="post">
         <label for="preference" value="preference">Preference</label>
         <!-- <input type="text" name="preference" id="preference" class="form-control" required/> -->
@@ -35,5 +35,7 @@
       </form>
     </div>
 </main>
-
+<script>
+  document.getElementById('preference').value = document.getElementById('stext').innerText;
+</script>
 <%- include ('../partials/footer') %>

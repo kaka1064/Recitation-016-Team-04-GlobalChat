@@ -135,8 +135,7 @@ app.post("/settingsNewPassword", async (req,res)=>{
 
 app.post("/settings",(req,res) => {
   let query = `update users set preference = $1 where username = $2 returning *;`
-  db.one(query,[req.body.preference,req.session.user.username])
-  .then(data=>{
+  db.one(query,[req.body.preference,req.session.user.username]).then(data=>{
     req.session.user.preference = data.preference;
     req.session.save();
     res.render('pages/settings',{
