@@ -7,7 +7,14 @@
       <% if (locals.user) {%><h3 style="color:#5b5b5b">You are currently viewing posts in <%- user.preference %></h3><%}%>
       <form class="form"  action="/settings" method="post">
         <label for="preference" value="preference">Preference</label>
-        <input type="text" name="preference" id="preference" class="form-control" required/>
+        <!-- <input type="text" name="preference" id="preference" class="form-control" required/> -->
+        <select name="preference" id="preference" class="form-control">
+          <option value="English">English</option>
+          <option value="Japanese">Japanese</option>
+          <option value="Spanish">Spanish</option>
+          <option value="French">French</option>
+          <option value="German">German</option>
+        </select>
         <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Update Preference">
       </form>
       <form  class="form" style="margin-top: 1.5%;"action="/settingsNewPassword" method="post">
@@ -16,6 +23,15 @@
         <label style="margin-top: 1%;" for="password">New Password:</label>
         <input type="password" name="password" id="password" class="form-control" required/>
         <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Update Password">
+      </form>
+      <form class="form" action="/newUserinfo" method="post">
+        <label style="margin-top: 1%;" for="firstname">New first name:</label>
+        <input class="form-control" type="text" name="firstname" id="firstname" value="<%- locals.user.firstname %>"/> 
+
+        <label style="margin-top: 1%;" for="lastname">New Last Name</label>
+        <input class="form-control" type="text" name="lastname" id="lastname" value="<%- locals.user.lastname %> "/>
+
+        <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Change User First or Last name">
       </form>
     </div>
 </main>

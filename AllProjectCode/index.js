@@ -76,6 +76,7 @@ app.post('/register', async (req, res) => {
 app.get('/login',(req,res)=>{
   res.render('pages/login');
 });
+
 app.post('/login', async (req,res) =>  { 
   const username = req.body.username;
   const query = `select * from users where users.username = $1;`;
@@ -108,10 +109,6 @@ const auth = (req,res,next)=>{
 
 app.use(auth);
 
-app.get('/chatbox', (req, res) => {
-  res.render('pages/chatbox');
-});
-
 app.post("/settingsNewPassword", async (req,res)=>{
   db.one(`select * from users where username = $1;`,[req.session.user.username]).then(async data=>{
     const match = await bcrypt.compare(req.body.oldpass, data.password);
@@ -127,7 +124,11 @@ app.post("/settingsNewPassword", async (req,res)=>{
         res.render("pages/settings",{message: error, error: true, user: req.session.user});
       });
     } else {
-      res.render("pages/settings",{message: 'incorrect password', error: true, user:req.session.user});
+      res.render("pages/settings",{
+        message: 'incorrect password',
+        error: true,
+        user:req.session.user
+      });
     }
   });
 });
@@ -140,7 +141,8 @@ app.post("/settings",(req,res) => {
     req.session.save();
     res.render('pages/settings',{
       message:`updated language preference to: ${data.preference}`,
-      user:req.session.user});
+      user:req.session.user
+    });
   })
   .catch(error=>{
     console.log(error);
@@ -149,6 +151,16 @@ app.post("/settings",(req,res) => {
       error: true, 
       user: req.session.user
     });
+  });
+});
+
+app.post('/newUserinfo',(req,res)=>{
+  db.one('update users set firstname = $1, lastname = $2 where username = $3 returning *;',[req.body.firstname,req.body.lastname,req.session.user.username]).then(data=>{
+    req.session.user = data;
+    req.session.save();
+    res.render('pages/settings',{user:req.session.user, message:'user information updated'});
+  }).catch(error=>{
+    res.render('pages/settings',{message:error.message, error:true,user:req.session.user});
   });
 });
 
@@ -173,8 +185,11 @@ app.get('/home', (req,res) => {
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
-  res.render("pages/login", {message: "Logged out successfully"})
-})
+  res.render("pages/login", {message: "Logged out successfully"});
+});
 
+app.get('/*',(req,res)=>{
+  res.redirect('/home');
+});
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
