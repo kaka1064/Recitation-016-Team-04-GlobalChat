@@ -58,23 +58,39 @@
         </div>
       </div>
       <!-- add text down here for the actual post -->
-      <H1>This is where we will put the table of information</H1>
-      <table>
-        <tr>
-          <th>Author</th>
-          <th>Post</th>
-          <th>Topic</th>
-        </tr>
-        <% data.forEach(item => { %>
-          <tr>
-            <td><%= item.username %></td>
-            <td><%= item.post %></td>
-            <td><%= item.topic %></td> 
-            <td> <button type="submit" class="btn btn-primary mb-3">translate</button> </td>
-          </tr>
-        <% }) %>
-      </table>
-      
+      <div class="row" style="padding-top: 30px;">
+        <h2>Here are a list of current news stories:</h2>
+      </div>
+
+      <table class="table" style="border-style: groove ;">
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Post</th>
+                <th>Topic</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% news.forEach(function(news) { %>
+            <tr>
+              <td>
+                <%= news.username %>
+              </td>
+              <td>
+                <%= news.post %>
+              </td>
+              <td>
+                <%= news.topic %>
+              </td>
+              <td>
+                <form method="POST" action="chatbox.ejs">
+                    <button type="submit" class="btn btn-primary"  style="background-color: green; border-color:green" disabled>Translate
+                </form>
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>      
     </div>
 
 </main>

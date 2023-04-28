@@ -46,23 +46,6 @@ app.get('/welcome', (req, res) => {
 
 ///////////////   news   ////////////////////////////////////////////////////////////////
 
-app.get('/news', (req, res) => {
-  // console.log("username", req.body);
-  //need to send the data from the database to the page when rendering
-  const query = `select * from news;`;
-  db.any(query)
-
-  .then(function (data) {
-    res.render('pages/news', {username: req.session.user.username, data: data});
-  })
-
-  .catch(function (err) {
-    return console.log(err);
-  });
-
-  // res.render('pages/news', {username: req.session.user.username});
-});
-
 //app.post  NEEDS TO BE DONE
 app.post('/news', (req, res) => {
   //console.log("username", req.body);
@@ -113,6 +96,26 @@ app.get('/', (req, res) => {
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
 
 
+app.get('/home', (req, res) => {
+  res.render('pages/home.ejs', {username: req.session.user.username})
+});
+
+
+app.get('/news', (req,res) => {
+  var query = 'SELECT * FROM news;';
+
+  db.any(query)
+  .then((news) => {
+    console.log(news);
+    res.render('pages/news.ejs', {news, username: req.session.user.username});
+  })
+  .catch(function (err) {
+    console.log("There was an error");
+    // return console.log(err);
+  })
+});
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
 
 ///////////////    REGISTER   /////////////////////////////////////////////////////////////////////
 
@@ -176,7 +179,8 @@ app.post('/login', async (req,res) =>  {
         if (match) {
           req.session.user = data;
           req.session.save();
-          res.render("pages/home", {username, message: "Successfully logged in"});
+          res.redirect('/home');
+          //res.render("pages/home", {username, message: "Successfully logged in"});
         } else {
           // throw new Error("Incorrect username or password.");
           res.render("pages/login", {message: "Invalid input"});
