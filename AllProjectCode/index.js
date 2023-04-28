@@ -139,7 +139,7 @@ app.post("/settings",(req,res) => {
   .then(data=>{
     req.session.user.preference = req.body.preference;
     req.session.save();
-    res.redirect('/home');
+    res.render('pages/settings',{message:`updated language preference to: ${data.preference}`});
   })
   .catch(error=>{
     console.log(error);

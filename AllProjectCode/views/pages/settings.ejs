@@ -6,16 +6,16 @@
       <h1><centre>Settings page</centre></h1>
       <%if (locals.preference) {%><h3>You are currently viewing posts in <% preference %></h3><%}%>
       <form class="form"  action="/settings" method="post">
-        <label for="preference" value="preference" class="form-control">Preference</label>
+        <label for="preference" value="preference">Preference</label>
         <input type="text" name="preference" id="preference" class="form-control">
-        <input type="submit" value="Change">
+        <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Change">
       </form>
       <form  class="form" style="margin-top: 1.5%;"action="/settingsNewPassword" method="post">
-        <label style="margin-top: 3%;" for="oldpass" class="form-control">Old password:</label>
+        <label style="margin-top: 1%;" for="oldpass">Old password:</label>
         <input type="password" name="oldpass" id="oldpass" class="form-control"/>
-        <label style="margin-top: 3%;" for="password" class="form-control">New Password:</label>
+        <label style="margin-top: 1%;" for="password">New Password:</label>
         <input type="password" name="password" id="password" class="form-control">
-        <input style="margin-top: 3%;"type="submit" value="Update Password">
+        <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Update Password">
       </form>
     </div>
 </main>
