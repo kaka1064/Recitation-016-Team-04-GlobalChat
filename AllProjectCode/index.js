@@ -59,6 +59,7 @@ app.get('/news', (req, res) => {
   db.any(query)
 
   .then(function (data) {
+    console.log('!!!!!!', req.session.user);
     res.render('pages/news', {username: req.session.user.username, data: data});
   })
 
@@ -167,6 +168,22 @@ app.get('/', (req, res) => {
 
 
 
+// app.get('/news', (req,res) => {
+//   var query = 'SELECT * FROM news;';
+
+//   db.any(query)
+//   .then((news) => {
+//     console.log(news);
+//     res.render('pages/news.ejs', {news, username: req.session.user.username});
+//   })
+//   .catch(function (err) {
+//     console.log("There was an error");
+//     // return console.log(err);
+//   })
+// });
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
 ///////////////    REGISTER   /////////////////////////////////////////////////////////////////////
 
 app.get('/register', (req, res) => {
@@ -229,7 +246,8 @@ app.post('/login', async (req,res) =>  {
         if (match) {
           req.session.user = data;
           req.session.save();
-          res.render("pages/home", {username, message: "Successfully logged in"});
+          res.redirect('/home');
+          //res.render("pages/home", {username, message: "Successfully logged in"});
         } else {
           // throw new Error("Incorrect username or password.");
           res.render("pages/login", {message: "Invalid input"});
