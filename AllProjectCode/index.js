@@ -44,6 +44,12 @@ app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
 });
 
+///////////////   Profile ///////////////////////////////////////////////////////////////
+
+app.get('/profile', (req, res) => {
+  res.render("pages/profile");
+})
+
 ///////////////   news   ////////////////////////////////////////////////////////////////
 
 app.get('/news', (req, res) => {
