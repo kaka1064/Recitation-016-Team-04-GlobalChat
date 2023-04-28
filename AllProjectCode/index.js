@@ -113,26 +113,20 @@ app.get('/chatbox', (req, res) => {
 });
 
 app.post("/settingsNewPassword", async (req,res)=>{
-  if (!req.body.password || !req.body.oldpass) { // if passwords are null
-    res.redirect('/settings');
-  } else {
-    // const match = await bcrypt.compare(req.body.password, data.password);
-    var hash;
-    db.one(`select * from users where username = $1;`,[req.session.user.username]).then(async data=>{
-      const match = await bcrypt.compare(req.body.oldpass, data.password);
-      if (match){
-        let pass = await bcrypt.hash(req.body.password, 10);
-        let query = `update users set password = $1 where username = $2 returning *;`;
-        db.one(query,[pass,req.session.user.username]).then(data=>{
-          res.render("pages/settings",{message: 'password updated successfully'});
-        }).catch(error=>{
-          res.render("pages/settings",{message: error, error: true});
-        });
-      } else {
-        res.render("pages/settings",{message: 'incorrect password', error: true});
-      }
-    });
-  }
+  db.one(`select * from users where username = $1;`,[req.session.user.username]).then(async data=>{
+    const match = await bcrypt.compare(req.body.oldpass, data.password);
+    if (match){
+      let pass = await bcrypt.hash(req.body.password, 10);
+      let query = `update users set password = $1 where username = $2 returning *;`;
+      db.one(query,[pass,req.session.user.username]).then(data=>{
+        res.render("pages/settings",{message: 'password updated successfully'});
+      }).catch(error=>{
+        res.render("pages/settings",{message: error, error: true});
+      });
+    } else {
+      res.render("pages/settings",{message: 'incorrect password', error: true});
+    }
+  });
 });
 
 app.post("/settings",(req,res) => {
