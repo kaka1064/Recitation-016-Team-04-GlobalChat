@@ -4,17 +4,17 @@
   <div class="container">
       <%- include ('../partials/message') %>
       <h1><centre>Settings</centre></h1>
-      <% if (locals.user) {%><h3 style="color:#aaaaaa">You are currently viewing posts in <%- user.preference %></h3><%}%>
+      <% if (locals.user) {%><h3 style="color:#5b5b5b">You are currently viewing posts in <%- user.preference %></h3><%}%>
       <form class="form"  action="/settings" method="post">
         <label for="preference" value="preference">Preference</label>
-        <input type="text" name="preference" id="preference" class="form-control">
-        <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Change">
+        <input type="text" name="preference" id="preference" class="form-control" required/>
+        <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Update Preference">
       </form>
       <form  class="form" style="margin-top: 1.5%;"action="/settingsNewPassword" method="post">
         <label style="margin-top: 1%;" for="oldpass">Old password:</label>
-        <input type="password" name="oldpass" id="oldpass" class="form-control"/>
+        <input type="password" name="oldpass" id="oldpass" class="form-control" required/>
         <label style="margin-top: 1%;" for="password">New Password:</label>
-        <input type="password" name="password" id="password" class="form-control">
+        <input type="password" name="password" id="password" class="form-control" required/>
         <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Update Password">
       </form>
     </div>
