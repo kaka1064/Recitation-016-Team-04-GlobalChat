@@ -44,7 +44,31 @@ app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
 });
 
+///////////////   Profile ///////////////////////////////////////////////////////////////
+
+app.get('/profile', (req, res) => {
+  res.render("pages/profile");
+})
+
 ///////////////   news   ////////////////////////////////////////////////////////////////
+
+app.get('/news', (req, res) => {
+  // console.log("username", req.body);
+  //need to send the data from the database to the page when rendering
+  const query = `select * from news ORDER BY news.news_id DESC;`;
+  db.any(query)
+
+  .then(function (data) {
+    console.log('!!!!!!', req.session.user);
+    res.render('pages/news', {username: req.session.user.username, data: data});
+  })
+
+  .catch(function (err) {
+    return console.log(err);
+  });
+
+  // res.render('pages/news', {username: req.session.user.username});
+});
 
 //app.post  NEEDS TO BE DONE
 app.post('/news', (req, res) => {
@@ -80,6 +104,53 @@ app.post('/news', (req, res) => {
 
 ///////////////   news   ////////////////////////////////////////////////////////////////
 
+//////////////   Translate  /////////////////////////////////////////////////////////////
+
+app.post('/translate', (req, res) => {
+  const post = req.body.post;
+  // const language = req.session.user.preference;
+  const language = req.session.user.preference;
+
+  console.log(req.body.post);
+  console.log(language);
+
+  axios({
+    method: 'post',
+    url: `https://api-free.deepl.com/v2/translate`,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `DeepL-Auth-Key ${process.env.API_KEY}`
+    },
+    // data: `text=${encodeURIComponent(textToTranslate)}&target_lang=${targetLang}`
+    // data: `text=${textToTranslate}&target_lang=${targetLang}`
+    params: {
+      text: req.body.post,
+      // text: `こんにちは`,
+      target_lang: language,
+      // target_lang: `EN-US`,
+    },
+  })
+    .then(response => {
+      console.log(response.data);
+      console.log(response.data.translations[0].text);
+      const query = `select * from news ORDER BY news.news_id DESC;`;
+      db.any(query)
+
+      .then(function (data) {
+        res.render('pages/news', {username: req.session.user.username, data: data, message: "Translation for the post: " + response.data.translations[0].text});
+      })
+
+      .catch(function (err) {
+        return console.log(err);
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
+
+//////////////   Translate  /////////////////////////////////////////////////////////////
+
 ///////////////   Settings   ////////////////////////////////////////////////////////////////
 app.get('/settings', (req, res) => {
     res.render('pages/settings');
@@ -96,24 +167,20 @@ app.get('/', (req, res) => {
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
 
 
-app.get('/home', (req, res) => {
-  res.render('pages/home.ejs', {username: req.session.user.username})
-});
 
+// app.get('/news', (req,res) => {
+//   var query = 'SELECT * FROM news;';
 
-app.get('/news', (req,res) => {
-  var query = 'SELECT * FROM news;';
-
-  db.any(query)
-  .then((news) => {
-    console.log(news);
-    res.render('pages/news.ejs', {news, username: req.session.user.username});
-  })
-  .catch(function (err) {
-    console.log("There was an error");
-    // return console.log(err);
-  })
-});
+//   db.any(query)
+//   .then((news) => {
+//     console.log(news);
+//     res.render('pages/news.ejs', {news, username: req.session.user.username});
+//   })
+//   .catch(function (err) {
+//     console.log("There was an error");
+//     // return console.log(err);
+//   })
+// });
 
 ///////////////  HOME     ///////////////////////////////////////////////////////////////////
 
@@ -206,7 +273,7 @@ const auth = (req, res, next) => {
   }
   next();
 };  
-
+//need to catch the err
 app.use(auth);
 
 ///////////////  HOME     ///////////////////////////////////////////////////////////////////
@@ -217,13 +284,13 @@ app.get('/home', (req,res) => {
 
 ///////////////  HOME     ///////////////////////////////////////////////////////////////////
 
-///////////////   Chat Box   ////////////////////////////////////////////////////////////////
+// ///////////////   Chat Box   ////////////////////////////////////////////////////////////////
 
-app.get('/chatbox', (req, res) => {
-  res.render('pages/chatbox');
-});
+// app.get('/chatbox', (req, res) => {
+//   res.render('pages/chatbox');
+// });
 
-///////////////   Chat Box   ////////////////////////////////////////////////////////////////
+// ///////////////   Chat Box   ////////////////////////////////////////////////////////////////
 
 ///////////////   Settings   ////////////////////////////////////////////////////////////////
 app.get('/settings', (req, res) => {
