@@ -78,7 +78,6 @@ app.get('/login',(req,res)=>{
 });
 app.post('/login', async (req,res) =>  { 
   const username = req.body.username;
-  const password = req.body.password;
   const query = `select * from users where users.username = $1;`;
   const values = [username];
   
@@ -113,31 +112,62 @@ app.get('/chatbox', (req, res) => {
   res.render('pages/chatbox');
 });
 
+app.post("/settingsNewPassword", async (req,res)=>{
+  if (!req.body.password || !req.body.oldpass) { // if passwords are null
+    res.redirect('/settings');
+  } else {
+    // const match = await bcrypt.compare(req.body.password, data.password);
+    var hash;
+    db.one(`select * from users where username = $1;`,[req.session.user.username]).then(async data=>{
+      const match = await bcrypt.compare(req.body.oldpass, data.password);
+      if (match){
+        let pass = await bcrypt.hash(req.body.password, 10);
+        let query = `update users set password = $1 where username = $2 returning *;`;
+        db.one(query,[pass,req.session.user.username]).then(data=>{
+          res.render("pages/settings",{message: 'password updated successfully'});
+        }).catch(error=>{
+          res.render("pages/settings",{message: error, error: true});
+        });
+      }
+    });
+  }
+});
+
 app.post("/settings",(req,res) => {
   let query = `update users set preference = $1 where username = $2 returning *;`
   db.one(query,[req.body.preference,req.session.user.username])
   .then(data=>{
     req.session.user.preference = req.body.preference;
+    req.session.save();
     res.redirect('/home');
   })
   .catch(error=>{
     console.log(error);
-    res.render('pages/settings');
+    res.render('pages/settings',{
+      message:error, error: true
+    });
   });
 });
 
 app.get('/settings', (req, res) => {
   res.render('pages/settings',{
     error:false,
-    preference:req.session.user.preference});
+    preference:req.session.user.preference
+  });
 });
 
 app.get('/', (req, res) => {
-  res.render('pages/home',{username:req.session.user.username});
+  res.render('pages/home',{
+    username:req.session.user.username,
+    user: req.session.user
+  });
 });
 
 app.get('/home', (req,res) => {
-  res.render('pages/home', {username: req.session.user.username});
+  res.render('pages/home',{
+    username:req.session.user.username,
+    user: req.session.user
+  });
 });
 
 app.get("/logout", (req, res) => {
