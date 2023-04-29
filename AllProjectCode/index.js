@@ -88,7 +88,6 @@ app.post('/news', (req, res) => {
     req.body.post,
     req.body.language,
     req.body.topic,
-    
   ])
 
   .then(function (data) {
@@ -151,18 +150,8 @@ app.post('/translate', (req, res) => {
 
 //////////////   Translate  /////////////////////////////////////////////////////////////
 
-///////////////   Settings   ////////////////////////////////////////////////////////////////
-app.get('/settings', (req, res) => {
-    res.render('pages/settings');
-});
 
 ///////////////   Settings   ////////////////////////////////////////////////////////////////
-
-///////////////   THIS   /////////////////////////////////////////////////////////////////////
-
-app.get('/', (req, res) => {
-    res.render('pages/login'); //this will call the /anotherRoute route in the API
-  });
 
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
 
@@ -316,7 +305,7 @@ app.get('/settings', (req, res) => {
 
 app.get('/', (req, res) => {
   res.render('pages/home',{
-    user: req.session.user
+    user: req.session.user,
   });
 });
 
@@ -335,16 +324,7 @@ app.get("/logout", (req, res) => {
 app.get('/*',(req,res)=>{
   res.redirect('/home');
 });
-=======
-// Authentication middleware.
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    return res.redirect("login");
-  }
-  next();
-};  
-//need to catch the err
-app.use(auth);
+
 
 ///////////////  HOME     ///////////////////////////////////////////////////////////////////
 
@@ -362,10 +342,6 @@ app.get('/home', (req,res) => {
 
 // ///////////////   Chat Box   ////////////////////////////////////////////////////////////////
 
-///////////////   Settings   ////////////////////////////////////////////////////////////////
-app.get('/settings', (req, res) => {
-    res.render('pages/settings');
-});
 
 ///////////////   Settings   ////////////////////////////////////////////////////////////////
 
