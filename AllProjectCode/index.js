@@ -59,7 +59,6 @@ app.get('/news', (req, res) => {
   db.any(query)
 
   .then(function (data) {
-    console.log('!!!!!!', req.session.user);
     res.render('pages/news', {username: req.session.user.username, data: data});
   })
 
@@ -81,8 +80,6 @@ app.post('/news', (req, res) => {
   
 
   const query = `insert into news (username, post, language, topic) values ($1, $2, $3, $4) returning * ;`;
-  console.log(query);
-  console.log(req.body);
   db.any(query, [
     req.body.username,
     req.body.post,
@@ -201,7 +198,7 @@ app.post('/register', async (req, res) => {
 
   .catch(function(err) {
     //return console.log(err);
-    res.render("pages/register", {message: "Error with registration - maybe try a different username", error:true});
+    res.render("pages/register", {message: err.message, error:true});
   });
 });
 
@@ -211,10 +208,11 @@ app.get('/login',(req,res)=>{
 });
 
 app.post('/login', async (req,res) =>  { 
+  if (req.session.user) res.redirect('/home');
   const username = req.body.username;
   const query = `select * from users where users.username = $1;`;
   const values = [username];
-  
+
   db.one(query, values)
     .then(async (data) => {
       const match = await bcrypt.compare(req.body.password, data.password);
@@ -241,7 +239,6 @@ const auth = (req,res,next)=>{
 };
 
 app.use(auth);
-
 
 app.post("/settingsNewPassword", async (req,res)=>{
   db.one(`select * from users where username = $1;`,[req.session.user.username]).then(async data=>{
@@ -305,7 +302,8 @@ app.get('/settings', (req, res) => {
 
 app.get('/', (req, res) => {
   res.render('pages/home',{
-    user: req.session.user,
+    username: req.session.user.username,
+    user: req.session.user
   });
 });
 
@@ -325,34 +323,6 @@ app.get('/*',(req,res)=>{
   res.redirect('/home');
 });
 
-
-///////////////  HOME     ///////////////////////////////////////////////////////////////////
-
-app.get('/home', (req,res) => {
-  res.render('pages/home', {username: req.session.user.username})
-});
-
-///////////////  HOME     ///////////////////////////////////////////////////////////////////
-
-// ///////////////   Chat Box   ////////////////////////////////////////////////////////////////
-
-// app.get('/chatbox', (req, res) => {
-//   res.render('pages/chatbox');
-// });
-
-// ///////////////   Chat Box   ////////////////////////////////////////////////////////////////
-
-
-///////////////   Settings   ////////////////////////////////////////////////////////////////
-
-///////////////    lOGOUT  /////////////////////////////////////////////////////////////////////
-
-app.get("/logout", (req, res) => {
-  req.session.destroy();
-  res.render("pages/login", {message: "Logged out successfully"})
-})
-
-///////////////    lOGOUT  /////////////////////////////////////////////////////////////////////
 
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
