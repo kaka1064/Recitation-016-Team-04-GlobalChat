@@ -279,7 +279,13 @@ app.use(auth);
 ///////////////  HOME     ///////////////////////////////////////////////////////////////////
 
 app.get('/home', (req,res) => {
-  res.render('pages/home', {username: req.session.user.username})
+  const query = "SELECT * FROM news ORDER BY news.news_id DESC LIMIT(5);";
+  db.any(query)
+
+  .then(function (data) {
+    console.log(data);
+    res.render('pages/home', {username: req.session.user.username, data: data});
+  })
 });
 
 ///////////////  HOME     ///////////////////////////////////////////////////////////////////
