@@ -7,11 +7,11 @@ const bcrypt = require('bcrypt');
 const axios = require('axios');
 
 const dbConfig = {
-    host: 'db', 
-    port: 5432, 
-    database: process.env.POSTGRES_DB,
-    user: process.env.POSTGRES_USER, 
-    password: process.env.POSTGRES_PASSWORD, 
+  host: 'db', 
+  port: 5432, 
+  database: process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER, 
+  password: process.env.POSTGRES_PASSWORD, 
 };
 
 const db = pgp(dbConfig);
@@ -24,12 +24,14 @@ db.connect().then(obj=>{
 app.set('view engine','ejs');
 app.use(bodyParser.json());
 
+app.use(express.static('public'))
+
 app.use(
-    session({
-        secret : process.env.SESSION_SECRET,
-        saveUninitialized: false,
-        resave: false,
-    })
+  session({
+      secret : process.env.SESSION_SECRET,
+      saveUninitialized: false,
+      resave: false,
+  })
 );
 
 app.use(
@@ -41,6 +43,148 @@ app.use(
 app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
 });
+
+///////////////   Profile ///////////////////////////////////////////////////////////////
+
+app.get('/profile', (req, res) => {
+  res.render("pages/profile");
+})
+
+///////////////   news   ////////////////////////////////////////////////////////////////
+
+app.get('/news', (req, res) => {
+  // console.log("username", req.body);
+  //need to send the data from the database to the page when rendering
+  const query = `select * from news ORDER BY news.news_id DESC;`;
+  db.any(query)
+
+  .then(function (data) {
+    console.log('!!!!!!', req.session.user);
+    res.render('pages/news', {username: req.session.user.username, data: data});
+  })
+
+  .catch(function (err) {
+    return console.log(err);
+  });
+
+  // res.render('pages/news', {username: req.session.user.username});
+});
+
+//app.post  NEEDS TO BE DONE
+app.post('/news', (req, res) => {
+  //console.log("username", req.body);
+  //res.render('pages/news');
+  var username = req.body.username;
+  var post = req.body.post;
+  var language = req.body.language;
+  var topic = req.body.topic;
+  
+
+  const query = `insert into news (username, post, language, topic) values ($1, $2, $3, $4) returning * ;`;
+  console.log(query);
+  console.log(req.body);
+  db.any(query, [
+    req.body.username,
+    req.body.post,
+    req.body.language,
+    req.body.topic,
+    
+  ])
+
+  .then(function (data) {
+    res.redirect('/news');
+    // res.render("pages/news", { username: req.session.user.username, data: data, message: "post successfully added"});
+  })
+
+  .catch(function(err) {
+    //return console.log(err);
+    res.render("pages/news", {username: req.session.user.username, message: "failed to add post"});
+  });
+});
+
+///////////////   news   ////////////////////////////////////////////////////////////////
+
+//////////////   Translate  /////////////////////////////////////////////////////////////
+
+app.post('/translate', (req, res) => {
+  const post = req.body.post;
+  // const language = req.session.user.preference;
+  const language = req.session.user.preference;
+
+  console.log(req.body.post);
+  console.log(language);
+
+  axios({
+    method: 'post',
+    url: `https://api-free.deepl.com/v2/translate`,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `DeepL-Auth-Key ${process.env.API_KEY}`
+    },
+    // data: `text=${encodeURIComponent(textToTranslate)}&target_lang=${targetLang}`
+    // data: `text=${textToTranslate}&target_lang=${targetLang}`
+    params: {
+      text: req.body.post,
+      // text: `こんにちは`,
+      target_lang: language,
+      // target_lang: `EN-US`,
+    },
+  })
+    .then(response => {
+      console.log(response.data);
+      console.log(response.data.translations[0].text);
+      const query = `select * from news ORDER BY news.news_id DESC;`;
+      db.any(query)
+
+      .then(function (data) {
+        res.render('pages/news', {username: req.session.user.username, data: data, message: "Translation for the post: " + response.data.translations[0].text});
+      })
+
+      .catch(function (err) {
+        return console.log(err);
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
+
+//////////////   Translate  /////////////////////////////////////////////////////////////
+
+///////////////   Settings   ////////////////////////////////////////////////////////////////
+app.get('/settings', (req, res) => {
+    res.render('pages/settings');
+});
+
+///////////////   Settings   ////////////////////////////////////////////////////////////////
+
+///////////////   THIS   /////////////////////////////////////////////////////////////////////
+
+app.get('/', (req, res) => {
+    res.render('pages/login'); //this will call the /anotherRoute route in the API
+  });
+
+///////////////   THIS   /////////////////////////////////////////////////////////////////////
+
+
+
+// app.get('/news', (req,res) => {
+//   var query = 'SELECT * FROM news;';
+
+//   db.any(query)
+//   .then((news) => {
+//     console.log(news);
+//     res.render('pages/news.ejs', {news, username: req.session.user.username});
+//   })
+//   .catch(function (err) {
+//     console.log("There was an error");
+//     // return console.log(err);
+//   })
+// });
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
+///////////////    REGISTER   /////////////////////////////////////////////////////////////////////
 
 app.get('/register', (req, res) => {
   res.render('pages/register');
@@ -108,6 +252,7 @@ const auth = (req,res,next)=>{
 };
 
 app.use(auth);
+
 
 app.post("/settingsNewPassword", async (req,res)=>{
   db.one(`select * from users where username = $1;`,[req.session.user.username]).then(async data=>{
@@ -190,5 +335,48 @@ app.get("/logout", (req, res) => {
 app.get('/*',(req,res)=>{
   res.redirect('/home');
 });
+=======
+// Authentication middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("login");
+  }
+  next();
+};  
+//need to catch the err
+app.use(auth);
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
+app.get('/home', (req,res) => {
+  res.render('pages/home', {username: req.session.user.username})
+});
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
+// ///////////////   Chat Box   ////////////////////////////////////////////////////////////////
+
+// app.get('/chatbox', (req, res) => {
+//   res.render('pages/chatbox');
+// });
+
+// ///////////////   Chat Box   ////////////////////////////////////////////////////////////////
+
+///////////////   Settings   ////////////////////////////////////////////////////////////////
+app.get('/settings', (req, res) => {
+    res.render('pages/settings');
+});
+
+///////////////   Settings   ////////////////////////////////////////////////////////////////
+
+///////////////    lOGOUT  /////////////////////////////////////////////////////////////////////
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.render("pages/login", {message: "Logged out successfully"})
+})
+
+///////////////    lOGOUT  /////////////////////////////////////////////////////////////////////
+
 module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
