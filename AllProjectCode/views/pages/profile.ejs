@@ -4,6 +4,20 @@
   <div class="container">
     <!-- THE REST OF YOUR HTML CODE GOES HERE -->
     <h1>this is the profile pages</h1>
+    <%if (locals.info) {%>
+      <ul>
+      <% for (var i = 0; i < info.length; i++){ %>
+      <li><%-info[i].firstname%> <%-info[i].lastname%> &NonBreakingSpace;<a href="profile?user=<%- info[i].username%>" class="btn btn-primary">View user</a></li>
+      <%}%>
+    </ul>
+    <%} else if (locals.user) {%>
+      <h3>Username: <%-user.username%></h3>
+      <h4>Firstname: <%-user.firstname%></h4>
+      <h4>Lastname: <%-user.lastname%></h4>
+      <h4>Language Preference: <%-user.preference%></h4>
+      <%} else {%>
+        <h5>No user found</h5>
+        <%}%>
   </div>
 </main>
 
