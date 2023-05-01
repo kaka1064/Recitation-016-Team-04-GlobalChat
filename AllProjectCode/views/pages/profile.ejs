@@ -2,6 +2,7 @@
 
 <main>
   <div class="container">
+<<<<<<< HEAD
     <!-- THE REST OF YOUR HTML CODE GOES HERE -->
     <h1>this is the profile pages</h1>
     <%if (locals.info) {%>
@@ -18,6 +19,26 @@
       <%} else {%>
         <h5>No user found</h5>
         <%}%>
+=======
+    <table class="table" style="border-style: groove ;">
+      <thead>
+        <tr>
+          <th>Author</th>
+          <th>Post</th>
+          <th>Topic</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% news.forEach(item => { %>
+          <tr>
+            <td><%= item.username %></td>
+            <td><%= item.post %></td>
+            <td><%= item.topic %></td> 
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>  
+>>>>>>> e9b9ed2bfd44edb4697e72a45bce77740c6e6cab
   </div>
 </main>
 

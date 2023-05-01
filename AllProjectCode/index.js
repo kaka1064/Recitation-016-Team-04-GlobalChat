@@ -46,7 +46,18 @@ app.get('/welcome', (req, res) => {
 
 ///////////////   Profile ///////////////////////////////////////////////////////////////
 
+app.get('/profile', (req, res) => {  
+  const query = `select * from news Where username=$1 ORDER BY news.news_id DESC;`;
+  db.any(query,[req.session.user.username])
 
+  .then(function (news) {
+    console.log('!!!!!!', req.session.user);
+    res.render('pages/profile', {username: req.session.user.username, news: news});
+  })
+  .catch(function (err) {
+    return console.log(err);
+  });
+})
 ///////////////   news   ////////////////////////////////////////////////////////////////
 
 
@@ -289,6 +300,16 @@ app.post("/settingsNewPassword", async (req,res)=>{
       });
     }
   });
+});
+
+app.get('/home', (req,res) => {
+  const query = "SELECT * FROM news ORDER BY news.news_id DESC LIMIT(5);";
+  db.any(query)
+
+  .then(function (data) {
+    console.log(data);
+    res.render('pages/home', {username: req.session.user.username, data: data});
+  })
 });
 
 app.post("/settings",(req,res) => {
