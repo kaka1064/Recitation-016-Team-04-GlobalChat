@@ -46,10 +46,18 @@ app.get('/welcome', (req, res) => {
 
 ///////////////   Profile ///////////////////////////////////////////////////////////////
 
-app.get('/profile', (req, res) => {
-  res.render("pages/profile");
-})
+app.get('/profile', (req, res) => {  
+  const query = `select * from news Where username=$1 ORDER BY news.news_id DESC;`;
+  db.any(query,[req.session.user.username])
 
+  .then(function (news) {
+    console.log('!!!!!!', req.session.user);
+    res.render('pages/profile', {username: req.session.user.username, news: news});
+  })
+  .catch(function (err) {
+    return console.log(err);
+  });
+})
 ///////////////   news   ////////////////////////////////////////////////////////////////
 
 app.get('/news', (req, res) => {
