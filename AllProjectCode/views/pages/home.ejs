@@ -2,17 +2,45 @@
 <%- include ('../partials/menu') %>
 
 <main>
-    <div class="container welcome-container">
-      <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-      <h1><centre>Hey there, <%= username %>!</centre></h1>
-      <p>
-        Welcome to Global Chat, the news site where you can read the news in whatever language you prefer. Simply navigate to the <a href="./news">News page</a> and all the stories will automatically be translated into your language of choice.
-      </p>
-      <p>
-        You can change your preferred language at your <a href="./settings">Settings page</a>.
-      </p>
+    <div class="container">
+      <div class="col"><%- include ('../partials/message') %></div>
 
-      <a class="btn btn-primary" href="/chatbox" role="button">Let's go!</a>
+      <div class="welcome-container">
+        <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+        <h1><centre>Hey there, <%= username %>!</centre></h1>
+        <p>
+          Welcome to Global Chat, the news site where you can read the news in whatever language you prefer. Simply navigate to the <a href="/news">News page</a> and all the stories will automatically be translated into your language of choice.
+        </p>
+        <p>
+          You can change your preferred language at your <a href="/settings">Settings page</a>.
+        </p>
+      </div>
+      
+      <div class="latest-stories">
+        <h3>Check out these recent stories:</h3>
+        <%
+          data.forEach(item => { %>
+            <div class="card" style="width:18%;height:100%;display:inline-flex;"><div class="card-body">
+              <h4 class="card-title">In <b><%- item.topic %></b> by <b><%- item.username %></b></h4>
+              <p class="card-text">
+                <%- item.post %>
+              </p>
+              <form method ="POST" action ="/translate">
+                <input 
+                    type = "hidden"
+                    name = "post"
+                    value = "<%-item.post %>"
+                />
+              <button type="submit" class="btn btn-primary mb-3" style="background-color: green; border-color:green">View translation</button>
+            </form>
+            </div></div>
+        <%});%>
+        <br>
+        <a class="btn btn-primary" href="/news" role="button">See all stories</a>
+        <div class="card">
+
+        </div>
+      </div>
     </div>
 </main>
 

@@ -1,0 +1,98 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<main>
+    <div class="container">
+      <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+      <div class="col"><%- include ('../partials/message') %></div>
+      <h1><centre>News page</centre></h1>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        New Post
+      </button>
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action = "/news" method = "POST">
+                <div class="mb-3">
+                  <label for="username1" class="form-label">Username:</label>
+                  <input type="text" class="form-control" id="username" name ="username"  value = "<%=username%>" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="post1" class="form-label">Post: </label>
+                  <input type="text" class="form-control" id="post" name = "post" required>
+                </div>
+                <div class="mb-3">
+                  <label for="language1" class="form-label">Language</label>
+                  <select id="language" name="language" required>
+                    <option value="EN">English</option>
+                    <option value="JA">Japanese</option>
+                    <option value="ES">Spanish</option>
+                    <option value="FR">French</option>
+                    <option value="DE">German</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="topic1" class="form-label">Topic: </label>
+                  <select id="topic" name="topic" required>
+                    <option value="politics">Politics</option>
+                    <option value="environment">Environment</option>
+                    <option value="war">War</option>
+                    <option value="sports">Sports</option>
+                    <option value="technology">Technology</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Post</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- add text down here for the actual post -->
+      <!-- <H1>This is where we will put the table of information</H1> -->
+      <div class="row" style="padding-top: 30px;">
+        <h2>Here are a list of current news stories:</h2>
+      </div>
+      <table class="table" style="border-style: groove ;">
+        <thead>
+          <tr>
+            <th>Author</th>
+            <th>Post</th>
+            <th>Topic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.forEach(item => { %>
+            <tr>
+              <td><%= item.username %></td>
+              <td><%= item.post %></td>
+              <td><%= item.topic %></td> 
+              <!-- <td> <button type="submit" class="btn btn-primary mb-3">translate</button> </td> -->
+              <td>
+                <form method ="POST" action ="/translate">
+                    <input 
+                        type = "hidden"
+                        name = "post"
+                        value = "<%-item.post %>"
+                    />
+                  <button type="submit" class="btn btn-primary mb-3" style="background-color: green; border-color:green">Translate</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>  
+    </div>
+
+</main>
+
+<%- include ('../partials/footer') %>

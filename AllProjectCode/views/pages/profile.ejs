@@ -1,0 +1,26 @@
+<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
+
+<main>
+  <div class="container">
+    <table class="table" style="border-style: groove ;">
+      <thead>
+        <tr>
+          <th>Author</th>
+          <th>Post</th>
+          <th>Topic</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% news.forEach(item => { %>
+          <tr>
+            <td><%= item.username %></td>
+            <td><%= item.post %></td>
+            <td><%= item.topic %></td> 
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>  
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>
