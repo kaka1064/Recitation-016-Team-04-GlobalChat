@@ -308,7 +308,7 @@ app.get('/home', (req,res) => {
 
   .then(function (data) {
     console.log(data);
-    res.render('pages/home', {username: req.session.user.username, data: data});
+    res.render('pages/home', {username: req.session.user.username, data: data,user:req.session.user});
   })
 });
 
