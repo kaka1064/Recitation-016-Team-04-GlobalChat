@@ -2,8 +2,24 @@
 
 <main>
   <div class="container">
-    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-    <h1>this is the profile pages</h1>
+    <table class="table" style="border-style: groove ;">
+      <thead>
+        <tr>
+          <th>Author</th>
+          <th>Post</th>
+          <th>Topic</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% news.forEach(item => { %>
+          <tr>
+            <td><%= item.username %></td>
+            <td><%= item.post %></td>
+            <td><%= item.topic %></td> 
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>  
   </div>
 </main>
 
