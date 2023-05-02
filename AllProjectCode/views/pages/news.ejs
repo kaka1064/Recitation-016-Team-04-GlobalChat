@@ -13,10 +13,8 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+              <h5 class="modal-title" id="exampleModalLabel">New Post</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <form action = "/news" method = "POST">
@@ -26,8 +24,9 @@
                 </div>
                 <div class="mb-3">
                   <label for="post1" class="form-label">Post: </label>
-                  <input type="text" class="form-control" id="post" name = "post" required>
-                </div>
+                  <textarea id="post" name="post" class="form-control" cols="30" rows="10" required></textarea>
+                  <!-- <input type="text" class="form-control" id="post" name = "post" required> -->
+                </div>  
                 <div class="mb-3">
                   <label for="language1" class="form-label">Language</label>
                   <select id="language" name="language" required>
