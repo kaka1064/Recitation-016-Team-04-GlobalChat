@@ -66,7 +66,8 @@ app.get('/news', (req, res) => {
   const query = `select * from news ORDER BY news.news_id DESC;`;
   db.any(query)
 
-  .then(function(data)  {
+  .then(function (data) {
+    console.log('!!!!!!', req.session.user);
     res.render('pages/news', {username: req.session.user.username, data: data});
   })
 
@@ -161,7 +162,25 @@ app.post('/translate', (req, res) => {
 ///////////////   THIS   /////////////////////////////////////////////////////////////////////
 
 
+app.post('/edit', (req, res) => {
+  var post = req.body.post
+  var language = req.body.language;
+  var topic = req.body.topic;
+  var id = req.body.news_id
+  var query = 'UPDATE news SET post = $1, language = $2, topic = $3 WHERE news_id = $4;';
 
+  console.log(id);
+  console.log(post);
+  
+
+  db.any(query, [post, language, topic, id])
+
+  .then(function (data) {
+    res.redirect('/profile');
+    //res.render("pages/profile", { username: req.session.user.username, data: data, message: "post successfully added"});
+  })
+
+});
 // app.get('/news', (req,res) => {
 //   var query = 'SELECT * FROM news;';
 

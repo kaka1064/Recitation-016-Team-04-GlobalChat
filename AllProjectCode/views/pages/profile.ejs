@@ -16,7 +16,8 @@
           <tr>
             <td><%= item.username %></td>
             <td><%= item.post %></td>
-            <td><%= item.topic %></td> 
+            <td><%= item.topic %></td>
+            <td hidden><%= item.news_id%></td> 
             <td>
               <div class = "col">
                 <input type="image" src="/resources/editButton.png" data-bs-toggle="modal" data-bs-target="#exampleModal1" style="width: 50px; height: 50px; cursor: pointer;"> 
@@ -30,13 +31,14 @@
                       </div>
                       <div class="modal-body">
                         <form action = "/edit" method = "POST">
+                          <input type="text" name="news_id" id="news_id" value="<%=item.news_id%>" hidden>
                           <div class="mb-3">
                             <label for="username1" class="form-label">Username:</label>
                             <input type="text" class="form-control" id="username" name ="username"  value = "<%=username%>" readonly>
                           </div>
                           <div class="mb-3">
-                            <label for="post1" class="form-label">Post: </label>
-                            <textarea id="post1" class="form-control" class="longInput" cols="30" rows="10" value="<%=item.post%>"><%=item.post%></textarea>
+                            <label for="post" class="form-label">Post: </label>
+                            <textarea id="post" name=post class="form-control" cols="30" rows="10"><%=item.post%></textarea>
                             <!-- <input type="text" class="form-control" id="post" name = "post" style="height: 300px; text-align:justify"required> -->
                           </div>
                           <div class="mb-3">
