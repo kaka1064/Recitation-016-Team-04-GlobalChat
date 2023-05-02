@@ -66,7 +66,7 @@ app.get('/news', (req, res) => {
   const query = `select * from news ORDER BY news.news_id DESC;`;
   db.any(query)
 
-  .then(function (data) {
+  .then(function(data)  {
     res.render('pages/news', {username: req.session.user.username, data: data});
   })
 
@@ -97,7 +97,7 @@ app.post('/news', (req, res) => {
 
   .then(function (data) {
     res.redirect('/news');
-    // res.render("pages/news", { username: req.session.user.username, data: data, message: "post successfully added"});
+    //res.render("pages/news", { username: req.session.user.username, data: data, message: "post successfully added"});
   })
 
   .catch(function(err) {
@@ -270,6 +270,7 @@ app.post("/settingsNewPassword", async (req,res)=>{
       });
     }
   });
+});
 
 app.get('/home', (req,res) => {
   const query = "SELECT * FROM news ORDER BY news.news_id DESC LIMIT(5);";
@@ -326,7 +327,7 @@ app.get('/', (req, res) => {
 
 app.get('/home', (req,res) => {
   res.render('pages/home',{
-    username:req.session.user.username,
+    username: req.session.user.username,
     user: req.session.user
   });
 });
