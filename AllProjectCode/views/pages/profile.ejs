@@ -15,7 +15,7 @@
       <tbody>
         <% news.forEach(item => { %>
           <tr>
-            <td><%= item.username %></td>
+            <td><%= item.news_id %></td>
             <td><%= item.post %></td>
             <td><%= item.topic %></td>
             <td>
@@ -27,6 +27,44 @@
                   />
                 <button type="submit" class="btn btn-primary mb-3" style="background-color: red; border-color:red">Delete</button>
               </form>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+                Edit Post
+              </button>
+              <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Edit Table</h5>
+                      <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action = "/edit" method = "POST">
+                        <div class="mb-3">
+                          <label for="post1" class="form-label">Post: </label>
+                          <input type="text" class="form-control" id="editpost" name = "editpost" value = "<%= item.post %>" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="topic1" class="form-label">Topic: </label>
+                          <select id="edittopic" name="edittopic" required>
+                            <option value="politics">Politics</option>
+                            <option value="environment">Environment</option>
+                            <option value="war">War</option>
+                            <option value="sports">Sports</option>
+                            <option value="technology">Technology</option>
+                          </select>
+                        </div>
+                        <input type = "hidden" name = "editId" value = "<%= item.news_id %>"/>
+                        <button type="submit" class="btn btn-primary">Edit Post</button>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
             </td>
           </tr>
         <% }) %>
