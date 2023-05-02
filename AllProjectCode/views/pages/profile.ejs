@@ -1,4 +1,4 @@
-<%- include ('../partials/header') %> <%- include ('../partials/menu') %>
+<%- include ('../partials/head') %> <%- include ('../partials/menu') %>
 
 <main>
   <div class="container" style="padding-top: 30px">
@@ -8,7 +8,7 @@
           <th>Author</th>
           <th>Post</th>
           <th>Topic</th>
-          <th></th>
+          <th style="padding-left: 100px;">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -18,9 +18,10 @@
             <td><%= item.post %></td>
             <td><%= item.topic %></td>
             <td hidden><%= item.news_id%></td> 
-            <td>
-              <div class = "col">
-                <input type="image" src="/resources/editButton.png" data-bs-toggle="modal" data-bs-target="#exampleModal1" style="width: 50px; height: 50px; cursor: pointer;"> 
+            <td style="width: 30%;">
+              <div class="row" style="width: 80%">
+              <div class = "col" style="margin-left: 30px;">
+                <input type="image" src="/resources/editButton.png" data-bs-toggle="modal" data-bs-target="#exampleModal1" style="width: 60px; height: 60px; cursor: pointer;"> 
 
                 <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
@@ -67,8 +68,22 @@
                       <div class="modal-footer">
                         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                       </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </td>
+              <div class="col" style="width: 30%;">
+                <form method ="POST" action ="/delete">
+                  <input 
+                      type = "hidden"
+                      name = "deleteId"
+                      value = "<%-item.news_id %>"
+                  />
+                  <input type="image" src="/resources/redXDelete.png" data-bs-toggle="modal" onclick="SubmitEvent" style="width: 45 px; height: 50px; cursor: pointer; padding-top: 15% ;"> 
+                  <!-- <button type="submit" class="btn btn-primary mb-3" style="background-color: red; border-color:red">Delete</button> -->
+                </form>
+              </div>
+            </div>
           </tr>
         <% }) %>
       </tbody>

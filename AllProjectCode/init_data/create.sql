@@ -9,11 +9,11 @@ CREATE TABLE users(
 );
 
 
-DROP TABLE IF EXISTS friends CASCADE;
-CREATE TABLE friends(
-    username VARCHAR(50) NOT NULL,
-    friends VARCHAR(50) NOT NULL
-);
+-- DROP TABLE IF EXISTS friends CASCADE;
+-- CREATE TABLE friends(
+--     username VARCHAR(50) NOT NULL,
+--     friends VARCHAR(50) NOT NULL
+-- );
 
 DROP TABLE IF EXISTS news CASCADE;
 CREATE TABLE news(
