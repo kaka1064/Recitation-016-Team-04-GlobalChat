@@ -2,12 +2,14 @@
 
 <main>
   <div class="container">
+    <div class="col"><%- include ('../partials/message') %></div>
     <table class="table" style="border-style: groove ;">
       <thead>
         <tr>
           <th>Author</th>
           <th>Post</th>
           <th>Topic</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -15,7 +17,17 @@
           <tr>
             <td><%= item.username %></td>
             <td><%= item.post %></td>
-            <td><%= item.topic %></td> 
+            <td><%= item.topic %></td>
+            <td>
+              <form method ="POST" action ="/delete">
+                  <input 
+                      type = "hidden"
+                      name = "deleteId"
+                      value = "<%-item.news_id %>"
+                  />
+                <button type="submit" class="btn btn-primary mb-3" style="background-color: red; border-color:red">Delete</button>
+              </form>
+            </td>
           </tr>
         <% }) %>
       </tbody>
