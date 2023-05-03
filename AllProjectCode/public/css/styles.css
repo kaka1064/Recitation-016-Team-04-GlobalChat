@@ -1,0 +1,43 @@
+body {
+    background: #b8c0c0;
+}
+
+.welcome-container h1 {
+    text-align: center;
+    margin: 15px;
+}
+
+.welcome-container p {
+    font-size: 1.2rem;
+}
+
+.welcome-container p a {
+    color: #155;
+    transition: color 0.2s ease;
+}
+
+.welcome-container p a:hover {
+    color: #287;
+}
+
+.btn.btn-primary {
+    background-color: #155;
+}
+
+.btn.btn-primary:hover {
+    background-color: #287;
+}
+
+.navbar a {
+    transition: color 0.2s ease;
+    font-size: 1.3rem;
+}
+
+.navbar a:hover {
+    color: #287;
+}
+
+.card {
+    background: #ced6d6;
+    margin: 10px;
+}

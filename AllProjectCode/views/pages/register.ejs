@@ -1,38 +1,67 @@
 <%- include ('../partials/head') %>
-<!-- <%- include ('../partials/menu') %> -->
-<!-- don't need the menu yet when we haven't logged in yet -->
+
 
 
 <div class="col"><%- include ('../partials/message') %></div>
 
 <main>
-  <div class="container">
-    <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-    <form action = "/register" method = "post">
-      <div class="mb-3">
-        <label for="username1" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name = "username"  required>
+  <div class="container" style="padding-bottom: 30px;">
+    <div class="row" style="padding-top: 20px; padding-bottom: 20px ;">
+      <img src="/resources/globalicon.svg">
+    </div>
+    <div class="row" style="margin: auto; width: 60%; text-align: left; padding-top: 30px; font-size: 20px;"  >
+      <form action = "/register" method = "post">
+        <div class="row">
+          <div class="col">
+            <div class="mb-3" style="width: 350px;">
+              <label for="username1" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name = "username"  required>
+          </div>
+        </div>
+          <div class="col">
+            <div class="mb-3" style="width: 350px;">
+              <label for="firstname1" class="form-label">First name</label>
+              <input type="text" class="form-control" id="firstname" name="firstname"  required>
+            </div>
+          </div>
+          
+        <div class="row">
+          <div class="col">
+            <div class="mb-3" style="width: 350px;">
+              <label for="lastname1" class="form-label">Last name</label>
+              <input type="text" class="form-control" id="lastname" name="lastname"  required>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3" style="width: 350px;">
+              <label for="password1" class="form-label">Password (4 characters min.)</label>
+              <input type="password" class="form-control" id="password" name = "password" minlength="4" required>
+            </div>
+          </div>
       </div>
-      <div class="mb-3">
-        <label for="password1" class="form-label">Password (4 characters min.)</label>
-        <input type="password" class="form-control" id="password" name = "password" minlength="4" required>
+      <div class="row">
+        <div class="mb-3">
+          <label for="preference1" class="form-label">Preference</label>
+          <select id="preference" name="preference" required>
+          <option value="EN-US">English</option>
+          <option value="JA">Japanese</option>
+          <option value="ES">Spanish</option>
+          <option value="FR">French</option>
+          <option value="DE">German</option>
+          </select>
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="firstname1" class="form-label">First name</label>
-        <input type="text" class="form-control" id="firstname" name="firstname"  required>
+      <div class="row">
+        <div class="col" style="max-width: 30%;">
+          <button type="submit" class="btn btn-primary" value = "Submit">Register</button>
+          <!-- for the button go back to previous lab and find what need to do, do we need to create seperate form for button  -->
+        </div>
+        <div class="col" style="font-size: 15px; text-align: right; padding-top: 15px;">
+          <p>Already have an account? <a href="/login" class="link-primary">Login here</a></p>
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="lastname1" class="form-label">Last name</label>
-        <input type="text" class="form-control" id="lastname" name="lastname"  required>
-      </div>
-      <div class="mb-3">
-        <label for="preference1" class="form-label">Preference</label>
-        <input type="text" class="form-control" id="preference" name="preference" required>
-      </div>
-      <button type="submit" class="btn btn-primary" value = "Submit">Register</button>
       <!-- for the button go back to previous lab and find what need to do, do we need to create seperate form for button  -->
     </form>
-    <p>Already have an account? <a href="/login" class="link-primary">Login here</a></p>
   </div>
 </main>
 
