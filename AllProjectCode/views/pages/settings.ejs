@@ -7,7 +7,7 @@
       <form class="form"  action="/settings" method="post">
         <label for="preference" value="preference">Preference:</label>
         <select name="preference" id="preference" class="form-control">
-          <option value="EN">English</option>
+          <option value="EN-US">English</option>
           <option value="JA">Japanese</option>
           <option value="SP">Spanish</option>
           <option value="FR">French</option>
@@ -41,6 +41,6 @@
     </div>
 </main>
 <script>
-  document.getElementById('preference').value = "<%- locals.user.preference %>";
+  document.getElementById('preference').value = "<%= locals.user.preference %>";
 </script>
 <%- include ('../partials/footer') %>

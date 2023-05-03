@@ -46,6 +46,136 @@ app.get('/welcome', (req, res) => {
 
 ///////////////   Profile ///////////////////////////////////////////////////////////////
 
+
+//////////////   Translate  /////////////////////////////////////////////////////////////
+
+///////////////   Settings   ////////////////////////////////////////////////////////////////
+
+
+
+
+// app.get('/news', (req,res) => {
+//   var query = 'SELECT * FROM news;';
+
+//   db.any(query)
+//   .then((news) => {
+//     console.log(news);
+//     res.render('pages/news.ejs', {news, username: req.session.user.username});
+//   })
+//   .catch(function (err) {
+//     console.log("There was an error");
+//     // return console.log(err);
+//   })
+// });
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
+///////////////    REGISTER   /////////////////////////////////////////////////////////////////////
+
+app.get('/register', (req, res) => {
+    res.render('pages/register')
+  });  
+
+app.post('/register', async (req, res) => {
+  //hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10);
+
+  // var password = req.body.password;
+  var username = req.body.username;
+  var firstname = req.body.firstname;
+  var lastname = req.body.lastname;
+  var preference = req.body.preference;
+  // To-DO: Insert username and hashed password into 'users' table
+
+  const query = `insert into users (username, password, firstname, lastname, preference) values ($1, $2, $3, $4, $5) returning * ;`;
+  // const query = `insert into users (username, password) values (${req.body.username}, ${hash}) returning * ;`;
+  console.log(query);
+  //we dont need the req.body,username and hash below if we type it into the query
+  db.any(query, [
+    req.body.username,
+    hash,
+    req.body.firstname,
+    req.body.lastname,
+    req.body.preference,
+  ])
+
+  .then(function (data) {
+    res.render("pages/login", {message: "please log in now."}); //i also changed this to render instead
+    //so that users can have a message knowing what they are supposed to do.
+  })
+
+  .catch(function(err) {
+    //return console.log(err);
+    res.render("pages/register", {message: "Error with registration - maybe try a different username"});
+  });
+});
+
+///////////////    REGISTER  /////////////////////////////////////////////////////////////////////
+
+///////////////    LOGIN   /////////////////////////////////////////////////////////////////////
+
+app.get('/login',(req,res)=>{
+    res.render('pages/login');
+});
+
+app.post('/login', async (req,res) =>  { 
+    const username = req.body.username;
+    const password = req.body.password;
+    const query = `select * from users where users.username = $1;`;
+    // const query = `select * from users where users.username = ${req.body.username}`;
+    const values = [username];
+    
+    db.one(query, values)
+      .then(async (data) => {
+
+        const match = await bcrypt.compare(req.body.password, data.password);
+        if (match) {
+          req.session.user = data;
+          req.session.save();
+          res.redirect('/home');
+          //res.render("pages/home", {username, message: "Successfully logged in"});
+        } else {
+          // throw new Error("Incorrect username or password.");
+          res.render("pages/login", {message: "Invalid input"});
+          //changed these messages ^ v to invalid input to try to match negatvie test case
+        }
+      })
+      .catch((err) => {
+        //console.log(err);
+        //may only need this part for lab 11
+        // res.json({status: 'fail', message: 'Invalid input'});
+        res.render("pages/register", {message: "Invalid input"}); 
+        //i changed this to render instead of redirect
+        //so that a message can display, i believe a message gets rid of user confusion
+      });
+  })
+
+///////////////    LOGIN   /////////////////////////////////////////////////////////////////////
+
+// Authentication middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("login");
+  }
+  next();
+};  
+//need to catch the err
+app.use(auth);
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
+app.get('/home', (req,res) => {
+  const query = "SELECT * FROM news ORDER BY news.news_id DESC LIMIT(5);";
+  db.any(query)
+
+  .then(function (data) {
+    console.log(data);
+    res.render('pages/home', {username: req.session.user.username, data: data});
+  })
+});
+
+///////////////  HOME     ///////////////////////////////////////////////////////////////////
+
 app.get('/profile', (req, res) => {  
   const query = `select * from news Where username=$1 ORDER BY news.news_id DESC;`;
   db.any(query,[req.session.user.username])
@@ -142,77 +272,6 @@ app.post('/edit', (req, res) => {
 //   })
 // });
 
-///////////////  HOME     ///////////////////////////////////////////////////////////////////
-
-///////////////    REGISTER   /////////////////////////////////////////////////////////////////////
-
-app.get('/register', (req, res) => {
-  res.render('pages/register');
-});  
-
-app.post('/register', async (req, res) => {
-  const hash = await bcrypt.hash(req.body.password, 10);
-  var username = req.body.username;
-  var firstname = req.body.firstname;
-  var lastname = req.body.lastname;
-  var preference = req.body.preference;
-  const query = `insert into users (username, password, firstname, lastname, preference) values ($1, $2, $3, $4, $5) returning * ;`;
-  db.any(query, [
-    username,
-    hash,
-    firstname,
-    lastname,
-    preference
-  ])
-
-  .then(function (data) {
-    res.render("pages/login", {message: "Please log in now."}); //i also changed this to render instead
-    //so that users can have a message knowing what they are supposed to do.
-  })
-
-  .catch(function(err) {
-    //return console.log(err);
-    res.render("pages/register", {message: err.message, error:true});
-  });
-});
-
-
-app.get('/login',(req,res)=>{
-  res.render('pages/login');
-});
-
-app.post('/login', async (req,res) =>  { 
-  if (req.session.user) res.redirect('/home');
-  const username = req.body.username;
-  const query = `select * from users where users.username = $1;`;
-  const values = [username];
-
-  db.one(query, values)
-    .then(async (data) => {
-      const match = await bcrypt.compare(req.body.password, data.password);
-      if (match) {
-        req.session.user = data;
-        req.session.save();
-        res.redirect("/home");
-      } else {
-        // throw new Error("Incorrect username or password.");
-        res.render("pages/login", {message: "Invalid input"});
-        //changed these messages ^ v to invalid input to try to match negatvie test case
-      }
-    })
-    .catch((err) => {
-      res.render("pages/register", {message: "Invalid input"}); 
-    });
-})
-
-const auth = (req,res,next)=>{
-  if (!req.session.user){
-    return res.redirect('/login');
-  }
-  next();
-};
-
-app.use(auth);
 
 app.get('/news', (req, res) => {
   // console.log("username", req.body);
@@ -390,6 +449,15 @@ app.post("/settings",(req,res) => {
   });
 });
 
+app.post('/newUserinfo',(req,res)=>{
+  db.one('update users set firstname = $1, lastname = $2 where username = $3 returning *;',[req.body.firstname,req.body.lastname,req.session.user.username]).then(data=>{
+    req.session.user = data;
+    req.session.save();
+    res.render('pages/settings',{user:req.session.user, message:'user information updated'});
+  }).catch(error=>{
+    res.render('pages/settings',{message:error.message, error:true,user:req.session.user});
+  });
+});
 app.post('/newUserinfo',(req,res)=>{
   db.one('update users set firstname = $1, lastname = $2 where username = $3 returning *;',[req.body.firstname,req.body.lastname,req.session.user.username]).then(data=>{
     req.session.user = data;
