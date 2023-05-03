@@ -2,7 +2,7 @@
 <%- include ('../partials/menu') %>
 
 <main>
-    <div class="container">
+    <div class="container" style="padding-bottom: 30px;">
       <!-- THE REST OF YOUR HTML CODE GOES HERE -->
       <div class="col"><%- include ('../partials/message') %></div>
       <h1><centre>News page</centre></h1>
@@ -26,12 +26,12 @@
                 </div>
                 <div class="mb-3">
                   <label for="post1" class="form-label">Post: </label>
-                  <input type="text" class="form-control" id="post" name = "post" required>
+                  <textarea class="form-control" id="post" name = "post" cols="30" rows="10" required></textarea>
                 </div>
                 <div class="mb-3">
                   <label for="language1" class="form-label">Language</label>
                   <select id="language" name="language" required>
-                    <option value="EN">English</option>
+                    <option value="EN-US">English</option>
                     <option value="JA">Japanese</option>
                     <option value="ES">Spanish</option>
                     <option value="FR">French</option>
