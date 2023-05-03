@@ -49,9 +49,8 @@ app.get('/welcome', (req, res) => {
 app.get('/profile', (req, res) => {  
   const query = `select * from news Where username=$1 ORDER BY news.news_id DESC;`;
   db.any(query,[req.session.user.username])
-
   .then(function (news) {
-    console.log('!!!!!!', req.session.user);
+    console.log('!!!!!!', news);
     res.render('pages/profile', {username: req.session.user.username, news: news});
   })
   .catch(function (err) {
@@ -88,6 +87,34 @@ app.post('/delete', (req, res) => {
     });
     return console.log(err);
   });
+});
+
+app.post('/edit', (req, res) => {
+  var username = req.session.user.username;
+  var id = req.body.editId;
+  var post = req.body.editpost;
+  var topic = req.body.edittopic;
+  var language = req.body.editlanguage;
+  console.log(req.body);
+  const query = `UPDATE news SET post = '${post}', language = '${language}', topic = '${topic}' WHERE news_id = ${id};`;
+  // const query = `UPDATE news SET post = '${post}', topic = '${topic}' WHERE ${id}(SELECT * from );`;
+  db.any(query)
+  .then(function () {
+    res.redirect('/profile');
+  })
+  .catch(function (err) {
+    const query = `select * from news Where username=$1 ORDER BY news.news_id DESC;`;
+    db.any(query,[req.session.user.username])
+  
+    .then(function (news) {
+      res.render('pages/profile', {username: req.session.user.username, news: news, message: "failed to edit post"});
+    })
+    .catch(function (err) {
+      return console.log(err);
+    });
+    return console.log(err);
+  });
+
 });
 ///////////////   news   ////////////////////////////////////////////////////////////////
 

@@ -1,7 +1,7 @@
 <%- include ('../partials/head') %> <%- include ('../partials/menu') %>
 
 <main>
-  <div class="container">
+  <div class="container" style="padding-bottom: 30px;">
     <div class="col"><%- include ('../partials/message') %></div>
     <table class="table" style="border-style: groove ;">
       <thead>
@@ -18,15 +18,75 @@
             <td><%= item.username %></td>
             <td><%= item.post %></td>
             <td><%= item.topic %></td>
-            <td>
-              <form method ="POST" action ="/delete">
-                  <input 
-                      type = "hidden"
-                      name = "deleteId"
-                      value = "<%-item.news_id %>"
-                  />
-                <button type="submit" class="btn btn-primary mb-3" style="background-color: red; border-color:red">Delete</button>
-              </form>
+            <td style="width: 30%;">
+              <div class="row" style="width: 80%">
+                <div class="col" style="margin-left: 30px;">
+                  <form method ="POST" action ="/delete">
+                    <input 
+                        type = "hidden"
+                        name = "deleteId"
+                        value = "<%-item.news_id %>"
+                    />
+                    <input type="image" src="/resources/redXDelete.png" onclick="SubmitEvent" style="width: 45px; height: 50px; cursor: pointer; padding-top: 15% ;">
+                    <!-- <button type="submit" class="btn btn-primary mb-3" style="background-color: red; border-color:red">Delete</button> -->
+                  </form>
+                </div>
+                  <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal<%- item.news_id %>">
+                    Edit Post
+                  </button> -->
+                <div class="col" style="width: 30%">
+                  <input type="image" src="/resources/editButton.png" data-bs-toggle="modal" data-bs-target="#editModal<%- item.news_id %>" style="width: 60px; height: 60px; cursor: pointer;"/>
+                  <div class="modal fade" id="editModal<%- item.news_id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Edit Table</h5>
+                          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action = "/edit" method = "POST">
+                            <div class="mb-3">
+                              <label for="username1" class="form-label">Username:</label>
+                              <input type="text" class="form-control" id="username" name ="username"  value = "<%=username%>" readonly>
+                            </div>
+                            <div class="mb-3">
+                              <label for="post1" class="form-label">Post: </label>
+                              <textarea class="form-control" id="editpost" name = "editpost" cols="30" rows="10" required><%- item.post%></textarea>
+                            </div>
+                            <div class="mb-3">
+                              <label for="language1" class="form-label">Language</label>
+                              <select id="editlanguage" name="editlanguage" required>
+                                <option value="EN-US">English</option>
+                                <option value="JA">Japanese</option>
+                                <option value="ES">Spanish</option>
+                                <option value="FR">French</option>
+                                <option value="DE">German</option>
+                              </select>
+                            </div>
+                            <div class="mb-3">
+                              <label for="topic1" class="form-label">Topic: </label>
+                              <select id="edittopic" name="edittopic" required>
+                                <option value="politics">Politics</option>
+                                <option value="environment">Environment</option>
+                                <option value="war">War</option>
+                                <option value="sports">Sports</option>
+                                <option value="technology">Technology</option>
+                              </select>
+                            </div>
+                            <input type = "hidden" name = "editId" value = "<%- item.news_id %>"/>
+                            <button type="submit" class="btn btn-primary">Edit Post</button>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </td>
           </tr>
         <% }) %>
