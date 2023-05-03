@@ -1,11 +1,46 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu') %>
-
 <main>
-    <div class="container" style="padding-bottom: 30px;">
-      <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-      <h1><centre>Settings page</centre></h1>
+  <div class="container">
+      <%- include ('../partials/message') %>
+      <h1><centre>Settings</centre></h1>
+      <form class="form"  action="/settings" method="post">
+        <label for="preference" value="preference">Preference:</label>
+        <select name="preference" id="preference" class="form-control">
+          <option value="EN-US">English</option>
+          <option value="JA">Japanese</option>
+          <option value="SP">Spanish</option>
+          <option value="FR">French</option>
+          <option value="GR">German</option>
+        </select>
+        <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Update Preference">
+      </form>
+      <form class="form" style="margin-top: 1.5%;"action="/settingsNewPassword" method="post">
+        <h5>New password</h5>
+        <label style="margin-top: 0.1%;" for="oldpass">Old password:</label>
+        <input type="password" name="oldpass" id="oldpass" class="form-control" required/>
+        <label style="margin-top: 1%;" for="password">New password:</label>
+        <input type="password" name="password" id="password" class="form-control" minlength="4" required/>
+        <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Update Password">
+      </form>
+      <form class="form" style="margin-top: 1.5%;" action="/newUserinfo" method="post">
+        <h5>Change first or last name</h5>
+        <label style="margin-top: 1%;" for="firstname">New first name:</label>
+        <input class="form-control" type="text" name="firstname" id="firstname" value="<%= locals.user.firstname %>"/> 
+        
+        <label style="margin-top: 1%;" for="lastname">New last Name:</label>
+        <input class="form-control" type="text" name="lastname" id="lastname" value="<%= locals.user.lastname %>"/>
+        
+        <input style="margin-top: 1%;" class="btn btn-primary" type="submit" value="Change User First or Last name">
+      </form>
+      <!-- <form style="margin-top: 2%;" action="/settingsDeleteAccount" method="post">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password"/>
+        <input type="submit" value="Delete Account" class="btn btn-danger"/>
+      </form> -->
     </div>
 </main>
-
+<script>
+  document.getElementById('preference').value = "<%= locals.user.preference %>";
+</script>
 <%- include ('../partials/footer') %>
