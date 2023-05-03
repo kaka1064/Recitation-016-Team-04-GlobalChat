@@ -96,7 +96,7 @@ app.post('/edit', (req, res) => {
   var topic = req.body.edittopic
   console.log(req.body);
   const query = `UPDATE news SET post = '${post}', topic = '${topic}' WHERE news_id = ${id};`;
-  // const query = `UPDATE news SET post = '${post}', topic = '${topic}' JOIN (SELECT * from );`;
+  // const query = `UPDATE news SET post = '${post}', topic = '${topic}' WHERE ${id}(SELECT * from );`;
   db.any(query)
   .then(function () {
     res.redirect('/profile');
