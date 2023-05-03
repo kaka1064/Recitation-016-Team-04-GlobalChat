@@ -15,7 +15,7 @@
       <tbody>
         <% news.forEach(item => { %>
           <tr>
-            <td><%= item.news_id %></td>
+            <td><%= item.username %></td>
             <td><%= item.post %></td>
             <td><%= item.topic %></td>
             <td style="width: 30%;">
@@ -48,8 +48,22 @@
                         <div class="modal-body">
                           <form action = "/edit" method = "POST">
                             <div class="mb-3">
+                              <label for="username1" class="form-label">Username:</label>
+                              <input type="text" class="form-control" id="username" name ="username"  value = "<%=username%>" readonly>
+                            </div>
+                            <div class="mb-3">
                               <label for="post1" class="form-label">Post: </label>
                               <textarea class="form-control" id="editpost" name = "editpost" cols="30" rows="10" required><%- item.post%></textarea>
+                            </div>
+                            <div class="mb-3">
+                              <label for="language1" class="form-label">Language</label>
+                              <select id="editlanguage" name="editlanguage" required>
+                                <option value="EN-US">English</option>
+                                <option value="JA">Japanese</option>
+                                <option value="ES">Spanish</option>
+                                <option value="FR">French</option>
+                                <option value="DE">German</option>
+                              </select>
                             </div>
                             <div class="mb-3">
                               <label for="topic1" class="form-label">Topic: </label>

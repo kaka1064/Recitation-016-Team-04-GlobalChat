@@ -92,10 +92,11 @@ app.post('/delete', (req, res) => {
 app.post('/edit', (req, res) => {
   var username = req.session.user.username;
   var id = req.body.editId;
-  var post = req.body.editpost
-  var topic = req.body.edittopic
+  var post = req.body.editpost;
+  var topic = req.body.edittopic;
+  var language = req.body.editlanguage;
   console.log(req.body);
-  const query = `UPDATE news SET post = '${post}', topic = '${topic}' WHERE news_id = ${id};`;
+  const query = `UPDATE news SET post = '${post}', language = '${language}', topic = '${topic}' WHERE news_id = ${id};`;
   // const query = `UPDATE news SET post = '${post}', topic = '${topic}' WHERE ${id}(SELECT * from );`;
   db.any(query)
   .then(function () {
